@@ -173,6 +173,7 @@ function Navbar() {
   }, []);
 
   const links = [
+    { label: 'Home', href: '#' },
     { label: 'About', href: '#about' },
     { label: 'Causes', href: '#causes' },
     { label: 'Impact', href: '#impact' },
