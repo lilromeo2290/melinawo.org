@@ -1541,7 +1541,7 @@ function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/50">
           <p>&copy; 2026 MELINAWO FOUNDATION. All rights reserved.</p>
           <p>
-            Designed and Powered by Clipe233 Engineers
+            Designed and Powered by <a href="https://clipe233eng.net/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors underline underline-offset-2">Clipe233 Engineers</a>
           </p>
         </div>
       </div>
