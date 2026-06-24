@@ -41,6 +41,14 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-ngo-green: #0033A0;
+  --color-ngo-green-light: #0047d6;
+  --color-ngo-green-pale: #b3c5ff;
+  --color-ngo-green-50: #eef2ff;
+  --color-ngo-teal: #001a54;
+  --color-ngo-amber: #FF3333;
+  --color-ngo-warm: #CC6600;
+  --color-ngo-orange: #e65c00;
   --color-brand: #0033A0;
   --color-brand-light: #0047d6;
   --color-brand-pale: #b3c5ff;

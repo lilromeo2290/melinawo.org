@@ -27,7 +27,6 @@ import {
   DollarSign,
   Target,
   Award,
-  Leaf,
   ChevronUp,
   Star,
 } from 'lucide-react';
@@ -146,7 +145,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 };
 
 const categoryColors: Record<string, string> = {
-  Environment: 'bg-emerald-100 text-emerald-700',
+  Environment: 'bg-blue-100 text-blue-700',
   Education: 'bg-amber-100 text-amber-700',
   Community: 'bg-rose-100 text-rose-700',
   Humanitarian: 'bg-orange-100 text-orange-700',
@@ -154,7 +153,7 @@ const categoryColors: Record<string, string> = {
 };
 
 const categoryGradients: Record<string, string> = {
-  Environment: 'from-emerald-500 to-teal-600',
+  Environment: 'from-blue-600 to-blue-800',
   Education: 'from-amber-500 to-orange-500',
   Community: 'from-rose-500 to-pink-600',
   Humanitarian: 'from-orange-500 to-red-500',
@@ -192,12 +191,10 @@ function Navbar() {
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-lg bg-ngo-green flex items-center justify-center">
-            <Leaf className="h-5 w-5 text-white" />
-          </div>
+        <a href="#" className="flex items-center gap-2.5 group">
+          <img src="/logo.png" alt="MELINAWO FOUNDATION" className="h-9 w-auto" />
           <span className="text-lg font-bold text-foreground group-hover:text-ngo-green transition-colors">
-            GreenHope
+            MELINAWO FOUNDATION
           </span>
         </a>
 
@@ -295,8 +292,8 @@ function HeroSection() {
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-ngo-green-50 via-white to-ngo-green-50/30" />
       <div className="absolute top-20 right-10 w-72 h-72 bg-ngo-green-pale/30 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-ngo-amber/15 rounded-full blur-3xl" />
-      <div className="absolute top-1/3 left-1/4 w-48 h-48 bg-emerald-200/20 rounded-full blur-2xl" />
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-ngo-warm/10 rounded-full blur-3xl" />
+      <div className="absolute top-1/3 left-1/4 w-48 h-48 bg-ngo-green-pale/15 rounded-full blur-2xl" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -307,16 +304,15 @@ function HeroSection() {
             transition={{ duration: 0.8, ease: 'easeOut' }}
           >
             <Badge className="mb-6 px-4 py-1.5 bg-ngo-green text-white border-none text-sm font-medium">
-              <Leaf className="h-3.5 w-3.5 mr-1.5" />
               Making a Difference Since 2012
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
-              Empowering Communities,{' '}
-              <span className="text-ngo-green">Restoring Hope</span>
+              Transforming Lives,{' '}
+              <span className="text-ngo-green">Building Futures</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-8 max-w-lg">
-              GreenHope Foundation is dedicated to creating sustainable change through environmental
-              conservation, education, and community empowerment across 23 countries worldwide.
+              MELINAWO FOUNDATION is dedicated to creating sustainable change through community
+              development, education, healthcare, and humanitarian support across 23 countries worldwide.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
@@ -457,13 +453,13 @@ function AboutSection() {
     },
     {
       icon: <TreePine className="h-7 w-7" />,
-      title: 'Environmental Restoration',
-      desc: 'Planting over 1 million trees each year and protecting critical ecosystems through community-led conservation programs spanning 12 countries.',
+      title: 'Community Development',
+      desc: 'Working with local leaders to build infrastructure, create economic opportunities, and strengthen community resilience across 23 countries worldwide.',
     },
     {
       icon: <HandHeart className="h-7 w-7" />,
-      title: 'Community Empowerment',
-      desc: 'Investing in women entrepreneurs, youth leadership programs, and local governance initiatives to build resilient, self-sustaining communities.',
+      title: 'Humanitarian Support',
+      desc: 'Delivering emergency relief, healthcare access, and livelihood programs to communities affected by crisis, conflict, and economic hardship.',
     },
   ];
 
@@ -485,9 +481,9 @@ function AboutSection() {
         >
           <h3 className="text-2xl font-bold text-foreground">Who We Are</h3>
           <p className="text-muted-foreground leading-relaxed">
-            Founded in 2012, GreenHope Foundation has grown from a small volunteer group into a
+            Founded in 2012, MELINAWO FOUNDATION has grown from a small volunteer group into a
             global non-profit operating in 23 countries. Our holistic approach addresses the
-            interconnected challenges of poverty, environmental degradation, and lack of access to
+            interconnected challenges of poverty, lack of education, and limited access to
             basic services by working directly with communities to design and implement sustainable
             solutions.
           </p>
@@ -496,7 +492,7 @@ function AboutSection() {
             in the lives of individuals and communities. Every project we undertake is designed to
             build local capacity, so that progress continues long after our direct involvement ends.
             Our team of 200+ professionals and 3,000+ volunteers worldwide are united by a shared
-            commitment to dignity, equity, and environmental stewardship.
+            commitment to dignity, equity, and community empowerment.
           </p>
           <div className="flex items-center gap-4 pt-2">
             <div className="flex -space-x-2">
@@ -741,17 +737,17 @@ function ImpactStatCard({
 
 function EventsSection({ events }: { events: Event[] }) {
   const eventGradients = [
-    'from-ngo-green to-emerald-700',
-    'from-amber-500 to-orange-600',
-    'from-teal-500 to-cyan-700',
-    'from-rose-500 to-pink-700',
+    'from-ngo-green to-ngo-teal',
+    'from-ngo-warm to-ngo-orange',
+    'from-ngo-teal to-ngo-green',
+    'from-ngo-red to-ngo-warm',
   ];
 
   const eventIcons = [
     <Star key="star" className="h-8 w-8" />,
-    <TreePine key="tree" className="h-8 w-8" />,
+    <Globe key="globe" className="h-8 w-8" />,
     <Droplets key="drops" className="h-8 w-8" />,
-    <Leaf key="leaf" className="h-8 w-8" />,
+    <Heart key="heart" className="h-8 w-8" />,
   ];
 
   return (
@@ -759,7 +755,7 @@ function EventsSection({ events }: { events: Event[] }) {
       <SectionHeading
         tag="Upcoming Events"
         title="Join Us in Making a Difference"
-        subtitle="From charity galas to community tree-planting days, our events bring people together for a common purpose. Find an event near you or participate virtually."
+        subtitle="From charity galas to community outreach days, our events bring people together for a common purpose. Find an event near you or participate virtually."
       />
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -824,11 +820,11 @@ function EventsSection({ events }: { events: Event[] }) {
 function TeamSection({ team }: { team: TeamMember[] }) {
   const avatarColors = [
     'bg-ngo-green',
-    'bg-amber-600',
-    'bg-rose-600',
-    'bg-teal-600',
-    'bg-orange-600',
-    'bg-emerald-700',
+    'bg-ngo-warm',
+    'bg-ngo-red',
+    'bg-ngo-teal',
+    'bg-ngo-orange',
+    'bg-ngo-green-light',
   ];
 
   return (
@@ -1319,7 +1315,7 @@ function ContactSection() {
                   'Annual financial transparency report',
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Leaf className="h-4 w-4 text-ngo-green mt-0.5 flex-shrink-0" />
+                    <Heart className="h-4 w-4 text-ngo-green mt-0.5 flex-shrink-0" />
                     {item}
                   </div>
                 ))}
@@ -1493,7 +1489,7 @@ function Footer() {
   }, []);
 
   const footerLinks = {
-    'Our Work': ['Clean Water', 'Education', 'Environment', 'Healthcare', 'Emergency Relief'],
+    'Our Work': ['Clean Water', 'Education', 'Healthcare', 'Emergency Relief', 'Community Dev'],
     'Get Involved': ['Donate', 'Volunteer', 'Partner With Us', 'Corporate Giving', 'Fundraise'],
     'About': ['Our Story', 'Team', 'Financial Reports', 'Careers', 'Press'],
     'Resources': ['Blog', 'Annual Report', 'FAQ', 'Privacy Policy', 'Terms of Use'],
@@ -1506,18 +1502,16 @@ function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
-                <Leaf className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-lg font-bold">GreenHope</span>
+              <img src="/logo.png" alt="MELINAWO FOUNDATION" className="h-9 w-auto brightness-0 invert" />
+              <span className="text-lg font-bold">MELINAWO FOUNDATION</span>
             </div>
             <p className="text-sm text-white/60 leading-relaxed mb-4">
-              Creating sustainable change through environmental conservation, education, and community
-              empowerment since 2012.
+              Creating sustainable change through community development, education, healthcare, and
+              humanitarian support since 2012.
             </p>
             <div className="flex items-center gap-2 text-sm text-white/60">
               <MapPin className="h-4 w-4" />
-              123 Hope Street, New York, NY 10001
+              123 Foundation Avenue, New York, NY 10001
             </div>
           </div>
 
@@ -1544,7 +1538,7 @@ function Footer() {
         <Separator className="my-8 bg-white/10" />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/50">
-          <p>&copy; 2026 GreenHope Foundation. All rights reserved.</p>
+          <p>&copy; 2026 MELINAWO FOUNDATION. All rights reserved.</p>
           <p>
             A registered 501(c)(3) nonprofit. EIN: 12-3456789
           </p>

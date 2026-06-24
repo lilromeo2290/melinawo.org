@@ -14,28 +14,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GreenHope Foundation — Empowering Communities Worldwide",
+  title: "MELINAWO FOUNDATION — Empowering Communities Worldwide",
   description:
-    "GreenHope Foundation is a non-profit organization dedicated to environmental conservation, education, and community empowerment. Join us in making a difference.",
+    "MELINAWO FOUNDATION is a non-profit organization dedicated to community development, education, healthcare, and humanitarian aid. Join us in making a difference.",
   keywords: [
     "NGO",
     "non-profit",
     "charity",
-    "environmental conservation",
+    "community development",
     "education",
-    "community empowerment",
+    "healthcare",
+    "humanitarian aid",
     "donate",
     "volunteer",
   ],
-  authors: [{ name: "GreenHope Foundation" }],
+  authors: [{ name: "MELINAWO FOUNDATION" }],
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/logo.png",
   },
   openGraph: {
-    title: "GreenHope Foundation — Empowering Communities Worldwide",
+    title: "MELINAWO FOUNDATION — Empowering Communities Worldwide",
     description:
-      "Join GreenHope Foundation in our mission to create sustainable change through environmental conservation, education, and community development.",
-    siteName: "GreenHope Foundation",
+      "Join MELINAWO FOUNDATION in our mission to create sustainable change through community development, education, healthcare, and humanitarian support.",
+    siteName: "MELINAWO FOUNDATION",
     type: "website",
   },
 };
