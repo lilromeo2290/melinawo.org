@@ -1541,7 +1541,7 @@ function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/50">
           <p>&copy; 2026 MELINAWO FOUNDATION. All rights reserved.</p>
           <p>
-            A registered 501(c)(3) nonprofit. EIN: 12-3456789
+            Designed and Powered by Clipe233 Engineers
           </p>
         </div>
       </div>
