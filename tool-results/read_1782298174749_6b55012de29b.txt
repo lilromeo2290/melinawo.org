@@ -1,0 +1,1372 @@
+   280→
+   281→function HeroSection() {
+   282→  const { count: causeCount, ref: causeRef } = useAnimatedCounter(6);
+   283→  const { count: countryCount, ref: countryRef } = useAnimatedCounter(23);
+   284→  const { count: donorCount, ref: donorRef } = useAnimatedCounter(18500);
+   285→
+   286→  const scrollToDonate = () => {
+   287→    document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' });
+   288→  };
+   289→  const scrollToCauses = () => {
+   290→    document.getElementById('causes')?.scrollIntoView({ behavior: 'smooth' });
+   291→  };
+   292→
+   293→  return (
+   294→    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+   295→      {/* Background gradient */}
+   296→      <div className="absolute inset-0 bg-gradient-to-br from-ngo-green-50 via-white to-ngo-green-50/30" />
+   297→      <div className="absolute top-20 right-10 w-72 h-72 bg-ngo-green-pale/30 rounded-full blur-3xl" />
+   298→      <div className="absolute bottom-20 left-10 w-96 h-96 bg-ngo-amber/15 rounded-full blur-3xl" />
+   299→      <div className="absolute top-1/3 left-1/4 w-48 h-48 bg-emerald-200/20 rounded-full blur-2xl" />
+   300→
+   301→      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+   302→        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+   303→          {/* Left: Text */}
+   304→          <motion.div
+   305→            initial={{ opacity: 0, x: -40 }}
+   306→            animate={{ opacity: 1, x: 0 }}
+   307→            transition={{ duration: 0.8, ease: 'easeOut' }}
+   308→          >
+   309→            <Badge className="mb-6 px-4 py-1.5 bg-ngo-green text-white border-none text-sm font-medium">
+   310→              <Leaf className="h-3.5 w-3.5 mr-1.5" />
+   311→              Making a Difference Since 2012
+   312→            </Badge>
+   313→            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
+   314→              Empowering Communities,{' '}
+   315→              <span className="text-ngo-green">Restoring Hope</span>
+   316→            </h1>
+   317→            <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-8 max-w-lg">
+   318→              GreenHope Foundation is dedicated to creating sustainable change through environmental
+   319→              conservation, education, and community empowerment across 23 countries worldwide.
+   320→            </p>
+   321→            <div className="flex flex-wrap gap-4">
+   322→              <Button
+   323→                size="lg"
+   324→                className="bg-ngo-green hover:bg-ngo-green-light text-white px-8 h-12 text-base font-semibold"
+   325→                onClick={scrollToDonate}
+   326→              >
+   327→                <Heart className="h-5 w-5 mr-2" />
+   328→                Donate Now
+   329→              </Button>
+   330→              <Button
+   331→                size="lg"
+   332→                variant="outline"
+   333→                className="px-8 h-12 text-base font-semibold"
+   334→                onClick={scrollToCauses}
+   335→              >
+   336→                Explore Causes
+   337→                <ArrowRight className="h-5 w-5 ml-2" />
+   338→              </Button>
+   339→            </div>
+   340→          </motion.div>
+   341→
+   342→          {/* Right: Stats Cards */}
+   343→          <motion.div
+   344→            initial={{ opacity: 0, x: 40 }}
+   345→            animate={{ opacity: 1, x: 0 }}
+   346→            transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+   347→            className="grid grid-cols-2 gap-4"
+   348→          >
+   349→            <StatCard
+   350→              icon={<Target className="h-6 w-6" />}
+   351→              value={causeCount}
+   352→              suffix=""
+   353→              label="Active Projects"
+   354→              ref={causeRef}
+   355→              delay={0}
+   356→            />
+   357→            <StatCard
+   358→              icon={<Globe className="h-6 w-6" />}
+   359→              value={countryCount}
+   360→              suffix="+"
+   361→              label="Countries Served"
+   362→              ref={countryRef}
+   363→              delay={0.1}
+   364→            />
+   365→            <StatCard
+   366→              icon={<Users className="h-6 w-6" />}
+   367→              value={donorCount}
+   368→              suffix="+"
+   369→              label="Global Donors"
+   370→              ref={donorRef}
+   371→              delay={0.2}
+   372→            />
+   373→            <StatCard
+   374→              icon={<Award className="h-6 w-6" />}
+   375→              value={14}
+   376→              suffix=""
+   377→              label="Years of Service"
+   378→              delay={0.3}
+   379→              staticValue
+   380→            />
+   381→          </motion.div>
+   382→        </div>
+   383→      </div>
+   384→
+   385→      {/* Bottom wave decoration */}
+   386→      <div className="absolute bottom-0 left-0 right-0">
+   387→        <svg viewBox="0 0 1440 80" fill="none" className="w-full h-auto">
+   388→          <path
+   389→            d="M0 40C240 70 480 10 720 40C960 70 1200 10 1440 40V80H0V40Z"
+   390→            fill="white"
+   391→            fillOpacity="0.6"
+   392→          />
+   393→          <path d="M0 60C360 80 720 40 1080 60C1260 70 1380 55 1440 60V80H0V60Z" fill="white" />
+   394→        </svg>
+   395→      </div>
+   396→    </section>
+   397→  );
+   398→}
+   399→
+   400→function StatCard({
+   401→  icon,
+   402→  value,
+   403→  suffix,
+   404→  label,
+   405→  ref,
+   406→  delay = 0,
+   407→  staticValue = false,
+   408→}: {
+   409→  icon: React.ReactNode;
+   410→  value: number;
+   411→  suffix: string;
+   412→  label: string;
+   413→  ref?: React.Ref<HTMLSpanElement>;
+   414→  delay?: number;
+   415→  staticValue?: boolean;
+   416→}) {
+   417→  const { count, ref: counterRef } = useAnimatedCounter(value, 2000);
+   418→  const displayRef = ref || counterRef;
+   419→
+   420→  return (
+   421→    <motion.div
+   422→      initial={{ opacity: 0, y: 20 }}
+   423→      animate={{ opacity: 1, y: 0 }}
+   424→      transition={{ duration: 0.5, delay }}
+   425→    >
+   426→      <Card className="border-0 shadow-lg shadow-ngo-green/5 bg-white/80 backdrop-blur-sm">
+   427→        <CardContent className="p-5">
+   428→          <div className="w-10 h-10 rounded-lg bg-ngo-green-50 flex items-center justify-center text-ngo-green mb-3">
+   429→            {icon}
+   430→          </div>
+   431→          <p className="text-2xl sm:text-3xl font-bold text-foreground">
+   432→            <span ref={staticValue ? undefined : displayRef}>
+   433→              {staticValue ? value : count.toLocaleString()}
+   434→            </span>
+   435→            {suffix}
+   436→          </p>
+   437→          <p className="text-sm text-muted-foreground mt-1">{label}</p>
+   438→        </CardContent>
+   439→      </Card>
+   440→    </motion.div>
+   441→  );
+   442→}
+   443→
+   444→/* ─────────────────────── ABOUT / MISSION ─────────────────────── */
+   445→
+   446→function AboutSection() {
+   447→  const missions = [
+   448→    {
+   449→      icon: <Droplets className="h-7 w-7" />,
+   450→      title: 'Clean Water Access',
+   451→      desc: 'Building wells and filtration systems to bring safe drinking water to over 2 million people in water-scarce regions across Africa and Southeast Asia.',
+   452→    },
+   453→    {
+   454→      icon: <BookOpen className="h-7 w-7" />,
+   455→      title: 'Quality Education',
+   456→      desc: 'Establishing schools, providing scholarships, and training 5,000+ teachers annually to ensure every child has access to quality education regardless of their circumstances.',
+   457→    },
+   458→    {
+   459→      icon: <TreePine className="h-7 w-7" />,
+   460→      title: 'Environmental Restoration',
+   461→      desc: 'Planting over 1 million trees each year and protecting critical ecosystems through community-led conservation programs spanning 12 countries.',
+   462→    },
+   463→    {
+   464→      icon: <HandHeart className="h-7 w-7" />,
+   465→      title: 'Community Empowerment',
+   466→      desc: 'Investing in women entrepreneurs, youth leadership programs, and local governance initiatives to build resilient, self-sustaining communities.',
+   467→    },
+   468→  ];
+   469→
+   470→  return (
+   471→    <SectionContainer id="about">
+   472→      <SectionHeading
+   473→        tag="Our Mission"
+   474→        title="Building a Sustainable Future for All"
+   475→        subtitle="We believe that lasting change comes from empowering communities with the tools, knowledge, and resources they need to thrive independently."
+   476→      />
+   477→
+   478→      <div className="grid md:grid-cols-2 gap-8 mb-16">
+   479→        <motion.div
+   480→          initial={{ opacity: 0, x: -30 }}
+   481→          whileInView={{ opacity: 1, x: 0 }}
+   482→          viewport={{ once: true }}
+   483→          transition={{ duration: 0.6 }}
+   484→          className="space-y-4"
+   485→        >
+   486→          <h3 className="text-2xl font-bold text-foreground">Who We Are</h3>
+   487→          <p className="text-muted-foreground leading-relaxed">
+   488→            Founded in 2012, GreenHope Foundation has grown from a small volunteer group into a
+   489→            global non-profit operating in 23 countries. Our holistic approach addresses the
+   490→            interconnected challenges of poverty, environmental degradation, and lack of access to
+   491→            basic services by working directly with communities to design and implement sustainable
+   492→            solutions.
+   493→          </p>
+   494→          <p className="text-muted-foreground leading-relaxed">
+   495→            We measure our success not just in numbers, but in the lasting, positive change we see
+   496→            in the lives of individuals and communities. Every project we undertake is designed to
+   497→            build local capacity, so that progress continues long after our direct involvement ends.
+   498→            Our team of 200+ professionals and 3,000+ volunteers worldwide are united by a shared
+   499→            commitment to dignity, equity, and environmental stewardship.
+   500→          </p>
+   501→          <div className="flex items-center gap-4 pt-2">
+   502→            <div className="flex -space-x-2">
+   503→              {['SC', 'JO', 'MG', 'DK'].map((initials, i) => (
+   504→                <Avatar key={i} className="h-9 w-9 border-2 border-white">
+   505→                  <AvatarFallback className="bg-ngo-green text-white text-xs font-semibold">
+   506→                    {initials}
+   507→                  </AvatarFallback>
+   508→                </Avatar>
+   509→              ))}
+   510→            </div>
+   511→            <p className="text-sm text-muted-foreground">
+   512→              <span className="font-semibold text-foreground">200+ team members</span> and{' '}
+   513→              <span className="font-semibold text-foreground">3,000+ volunteers</span> worldwide
+   514→            </p>
+   515→          </div>
+   516→        </motion.div>
+   517→
+   518→        <motion.div
+   519→          initial={{ opacity: 0, x: 30 }}
+   520→          whileInView={{ opacity: 1, x: 0 }}
+   521→          viewport={{ once: true }}
+   522→          transition={{ duration: 0.6, delay: 0.15 }}
+   523→          className="relative"
+   524→        >
+   525→          <div className="rounded-2xl bg-gradient-to-br from-ngo-green to-ngo-teal p-1">
+   526→            <div className="rounded-xl bg-white p-6 h-full">
+   527→              <div className="grid grid-cols-2 gap-4">
+   528→                <MiniStat value="23" label="Countries" />
+   529→                <MiniStat value="150+" label="Active Projects" />
+   530→                <MiniStat value="2M+" label="Lives Impacted" />
+   531→                <MiniStat value="97%" label="Funds to Programs" />
+   532→              </div>
+   533→              <div className="mt-6 p-4 bg-ngo-green-50 rounded-lg">
+   534→                <p className="text-sm font-medium text-ngo-green mb-1">Our Promise</p>
+   535→                <p className="text-sm text-muted-foreground">
+   536→                  At least 97% of every dollar donated goes directly to our programs on the ground.
+   537→                  We maintain the highest standards of financial transparency and accountability.
+   538→                </p>
+   539→              </div>
+   540→            </div>
+   541→          </div>
+   542→        </motion.div>
+   543→      </div>
+   544→
+   545→      {/* Mission Pillars */}
+   546→      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+   547→        {missions.map((m, i) => (
+   548→          <motion.div
+   549→            key={m.title}
+   550→            initial={{ opacity: 0, y: 30 }}
+   551→            whileInView={{ opacity: 1, y: 0 }}
+   552→            viewport={{ once: true }}
+   553→            transition={{ duration: 0.5, delay: i * 0.1 }}
+   554→          >
+   555→            <Card className="h-full border-0 shadow-md hover:shadow-lg transition-shadow group">
+   556→              <CardContent className="p-6">
+   557→                <div className="w-12 h-12 rounded-xl bg-ngo-green-50 text-ngo-green flex items-center justify-center mb-4 group-hover:bg-ngo-green group-hover:text-white transition-colors">
+   558→                  {m.icon}
+   559→                </div>
+   560→                <h4 className="font-semibold text-foreground mb-2">{m.title}</h4>
+   561→                <p className="text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
+   562→              </CardContent>
+   563→            </Card>
+   564→          </motion.div>
+   565→        ))}
+   566→      </div>
+   567→    </SectionContainer>
+   568→  );
+   569→}
+   570→
+   571→function MiniStat({ value, label }: { value: string; label: string }) {
+   572→  return (
+   573→    <div className="text-center p-3 rounded-lg bg-muted/50">
+   574→      <p className="text-xl font-bold text-ngo-green">{value}</p>
+   575→      <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
+   576→    </div>
+   577→  );
+   578→}
+   579→
+   580→/* ─────────────────────── CAUSES ─────────────────────── */
+   581→
+   582→function CausesSection({ causes }: { causes: Cause[] }) {
+   583→  const [showAll, setShowAll] = useState(false);
+   584→  const displayed = showAll ? causes : causes.filter((c) => c.featured);
+   585→
+   586→  return (
+   587→    <SectionContainer id="causes" className="bg-muted/30">
+   588→      <SectionHeading
+   589→        tag="Our Causes"
+   590→        title="Support What Matters Most"
+   591→        subtitle="Every cause we champion is rooted in real community needs. Choose a cause close to your heart and help us create measurable, lasting impact."
+   592→      />
+   593→
+   594→      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   595→        {displayed.map((cause, i) => (
+   596→          <motion.div
+   597→            key={cause.id}
+   598→            initial={{ opacity: 0, y: 30 }}
+   599→            whileInView={{ opacity: 1, y: 0 }}
+   600→            viewport={{ once: true }}
+   601→            transition={{ duration: 0.5, delay: i * 0.08 }}
+   602→          >
+   603→            <Card className="h-full overflow-hidden border-0 shadow-md hover:shadow-xl transition-all group">
+   604→              {/* Image placeholder */}
+   605→              <div className={`h-44 bg-gradient-to-br ${categoryGradients[cause.category] || 'from-gray-400 to-gray-600'} relative overflow-hidden`}>
+   606→                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors" />
+   607→                <div className="absolute top-3 left-3">
+   608→                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${categoryColors[cause.category] || 'bg-gray-100 text-gray-700'}`}>
+   609→                    {categoryIcons[cause.category]}
+   610→                    {cause.category}
+   611→                  </span>
+   612→                </div>
+   613→                <div className="absolute bottom-3 right-3">
+   614→                  <span className="bg-white/90 backdrop-blur-sm text-xs font-semibold text-foreground px-2.5 py-1 rounded-full">
+   615→                    {Math.round((cause.raised / cause.goal) * 100)}% funded
+   616→                  </span>
+   617→                </div>
+   618→              </div>
+   619→              <CardContent className="p-5">
+   620→                <h3 className="font-bold text-lg text-foreground mb-2 group-hover:text-ngo-green transition-colors">
+   621→                  {cause.title}
+   622→                </h3>
+   623→                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+   624→                  {cause.description}
+   625→                </p>
+   626→                <div className="space-y-2">
+   627→                  <div className="flex justify-between text-sm">
+   628→                    <span className="font-semibold text-ngo-green">
+   629→                      ${cause.raised.toLocaleString()}
+   630→                    </span>
+   631→                    <span className="text-muted-foreground">
+   632→                      of ${cause.goal.toLocaleString()}
+   633→                    </span>
+   634→                  </div>
+   635→                  <Progress value={(cause.raised / cause.goal) * 100} className="h-2" />
+   636→                </div>
+   637→              </CardContent>
+   638→              <CardFooter className="px-5 pb-5 pt-0">
+   639→                <Button
+   640→                  className="w-full bg-ngo-green hover:bg-ngo-green-light text-white"
+   641→                  onClick={() => document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' })}
+   642→                >
+   643→                  <Heart className="h-4 w-4 mr-2" />
+   644→                  Contribute
+   645→                </Button>
+   646→              </CardFooter>
+   647→            </Card>
+   648→          </motion.div>
+   649→        ))}
+   650→      </div>
+   651→
+   652→      {causes.length > 3 && (
+   653→        <div className="text-center mt-10">
+   654→          <Button
+   655→            variant="outline"
+   656→            size="lg"
+   657→            onClick={() => setShowAll(!showAll)}
+   658→            className="px-8"
+   659→          >
+   660→            {showAll ? 'Show Featured Only' : `View All ${causes.length} Causes`}
+   661→            <ArrowRight className={`h-4 w-4 ml-2 transition-transform ${showAll ? 'rotate-[-90deg]' : ''}`} />
+   662→          </Button>
+   663→        </div>
+   664→      )}
+   665→    </SectionContainer>
+   666→  );
+   667→}
+   668→
+   669→/* ─────────────────────── IMPACT STATS ─────────────────────── */
+   670→
+   671→function ImpactSection({ stats }: { stats: Stats }) {
+   672→  const statItems = [
+   673→    { label: 'Funds Raised', value: stats.fundsRaised, prefix: '$', suffix: '+', icon: <DollarSign className="h-6 w-6" /> },
+   674→    { label: 'Donors Worldwide', value: stats.donors, prefix: '', suffix: '+', icon: <Heart className="h-6 w-6" /> },
+   675→    { label: 'Active Projects', value: Math.max(stats.projects, 6), prefix: '', suffix: '', icon: <Target className="h-6 w-6" /> },
+   676→    { label: 'Countries Reached', value: 23, prefix: '', suffix: '', icon: <Globe className="h-6 w-6" /> },
+   677→  ];
+   678→
+   679→  return (
+   680→    <SectionContainer id="impact">
+   681→      <SectionHeading
+   682→        tag="Our Impact"
+   683→        title="Numbers That Tell Our Story"
+   684→        subtitle="Behind every number is a real person whose life has been changed. Here is a snapshot of the impact we have made together with our supporters."
+   685→      />
+   686→
+   687→      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+   688→        {statItems.map((item, i) => (
+   689→          <ImpactStatCard key={item.label} {...item} delay={i * 0.1} />
+   690→        ))}
+   691→      </div>
+   692→    </SectionContainer>
+   693→  );
+   694→}
+   695→
+   696→function ImpactStatCard({
+   697→  label,
+   698→  value,
+   699→  prefix,
+   700→  suffix,
+   701→  icon,
+   702→  delay,
+   703→}: {
+   704→  label: string;
+   705→  value: number;
+   706→  prefix: string;
+   707→  suffix: string;
+   708→  icon: React.ReactNode;
+   709→  delay: number;
+   710→}) {
+   711→  const { count, ref } = useAnimatedCounter(value, 2200);
+   712→  const isMoney = prefix === '$';
+   713→
+   714→  return (
+   715→    <motion.div
+   716→      initial={{ opacity: 0, scale: 0.9 }}
+   717→      whileInView={{ opacity: 1, scale: 1 }}
+   718→      viewport={{ once: true }}
+   719→      transition={{ duration: 0.5, delay }}
+   720→    >
+   721→      <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow">
+   722→        <CardContent className="p-6 sm:p-8">
+   723→          <div className="w-14 h-14 rounded-2xl bg-ngo-green-50 text-ngo-green flex items-center justify-center mx-auto mb-4">
+   724→            {icon}
+   725→          </div>
+   726→          <p className="text-3xl sm:text-4xl font-bold text-foreground mb-1">
+   727→            <span ref={ref}>
+   728→              {prefix}
+   729→              {isMoney ? (count / 1000).toFixed(0) + 'K' : count.toLocaleString()}
+   730→            </span>
+   731→            {suffix}
+   732→          </p>
+   733→          <p className="text-sm text-muted-foreground font-medium">{label}</p>
+   734→        </CardContent>
+   735→      </Card>
+   736→    </motion.div>
+   737→  );
+   738→}
+   739→
+   740→/* ─────────────────────── EVENTS ─────────────────────── */
+   741→
+   742→function EventsSection({ events }: { events: Event[] }) {
+   743→  const eventGradients = [
+   744→    'from-ngo-green to-emerald-700',
+   745→    'from-amber-500 to-orange-600',
+   746→    'from-teal-500 to-cyan-700',
+   747→    'from-rose-500 to-pink-700',
+   748→  ];
+   749→
+   750→  const eventIcons = [
+   751→    <Star key="star" className="h-8 w-8" />,
+   752→    <TreePine key="tree" className="h-8 w-8" />,
+   753→    <Droplets key="drops" className="h-8 w-8" />,
+   754→    <Leaf key="leaf" className="h-8 w-8" />,
+   755→  ];
+   756→
+   757→  return (
+   758→    <SectionContainer id="events" className="bg-muted/30">
+   759→      <SectionHeading
+   760→        tag="Upcoming Events"
+   761→        title="Join Us in Making a Difference"
+   762→        subtitle="From charity galas to community tree-planting days, our events bring people together for a common purpose. Find an event near you or participate virtually."
+   763→      />
+   764→
+   765→      <div className="grid md:grid-cols-2 gap-6">
+   766→        {events.map((event, i) => (
+   767→          <motion.div
+   768→            key={event.id}
+   769→            initial={{ opacity: 0, y: 30 }}
+   770→            whileInView={{ opacity: 1, y: 0 }}
+   771→            viewport={{ once: true }}
+   772→            transition={{ duration: 0.5, delay: i * 0.1 }}
+   773→          >
+   774→            <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all group h-full">
+   775→              <div className="flex flex-col sm:flex-row h-full">
+   776→                {/* Date Badge */}
+   777→                <div className={`sm:w-32 flex-shrink-0 bg-gradient-to-br ${eventGradients[i % eventGradients.length]} flex flex-col items-center justify-center p-5 text-white`}>
+   778→                  <div className="text-white/80 mb-1">{eventIcons[i % eventIcons.length]}</div>
+   779→                  <p className="text-3xl font-bold leading-none">
+   780→                    {new Date(event.date).getDate()}
+   781→                  </p>
+   782→                  <p className="text-sm font-medium mt-1 uppercase tracking-wider">
+   783→                    {new Date(event.date).toLocaleString('en-US', { month: 'short' })}
+   784→                  </p>
+   785→                  <p className="text-xs text-white/70 mt-0.5">
+   786→                    {new Date(event.date).getFullYear()}
+   787→                  </p>
+   788→                </div>
+   789→
+   790→                <CardContent className="p-5 flex-1 flex flex-col">
+   791→                  <h3 className="font-bold text-lg text-foreground mb-2 group-hover:text-ngo-green transition-colors">
+   792→                    {event.title}
+   793→                  </h3>
+   794→                  <p className="text-sm text-muted-foreground leading-relaxed mb-3 flex-1 line-clamp-2">
+   795→                    {event.description}
+   796→                  </p>
+   797→                  <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+   798→                    <span className="inline-flex items-center gap-1">
+   799→                      <MapPin className="h-3.5 w-3.5" />
+   800→                      {event.location}
+   801→                    </span>
+   802→                  </div>
+   803→                  <Button
+   804→                    variant="outline"
+   805→                    size="sm"
+   806→                    className="mt-3 w-full sm:w-auto"
+   807→                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+   808→                  >
+   809→                    <Calendar className="h-4 w-4 mr-1.5" />
+   810→                    Register Now
+   811→                  </Button>
+   812→                </CardContent>
+   813→              </div>
+   814→            </Card>
+   815→          </motion.div>
+   816→        ))}
+   817→      </div>
+   818→    </SectionContainer>
+   819→  );
+   820→}
+   821→
+   822→/* ─────────────────────── TEAM ─────────────────────── */
+   823→
+   824→function TeamSection({ team }: { team: TeamMember[] }) {
+   825→  const avatarColors = [
+   826→    'bg-ngo-green',
+   827→    'bg-amber-600',
+   828→    'bg-rose-600',
+   829→    'bg-teal-600',
+   830→    'bg-orange-600',
+   831→    'bg-emerald-700',
+   832→  ];
+   833→
+   834→  return (
+   835→    <SectionContainer id="team">
+   836→      <SectionHeading
+   837→        tag="Our Team"
+   838→        title="The People Behind the Mission"
+   839→        subtitle="Our diverse team of passionate professionals brings together expertise in development, operations, communications, and community engagement."
+   840→      />
+   841→
+   842→      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   843→        {team.map((member, i) => (
+   844→          <motion.div
+   845→            key={member.id}
+   846→            initial={{ opacity: 0, y: 30 }}
+   847→            whileInView={{ opacity: 1, y: 0 }}
+   848→            viewport={{ once: true }}
+   849→            transition={{ duration: 0.5, delay: i * 0.08 }}
+   850→          >
+   851→            <Card className="h-full border-0 shadow-md hover:shadow-lg transition-all group text-center">
+   852→              <CardContent className="p-6">
+   853→                <Avatar className="h-20 w-20 mx-auto mb-4 ring-4 ring-ngo-green-50">
+   854→                  <AvatarFallback className={`${avatarColors[i % avatarColors.length]} text-white text-xl font-bold`}>
+   855→                    {member.name.split(' ').map((n) => n[0]).join('')}
+   856→                  </AvatarFallback>
+   857→                </Avatar>
+   858→                <h3 className="font-bold text-lg text-foreground group-hover:text-ngo-green transition-colors">
+   859→                  {member.name}
+   860→                </h3>
+   861→                <p className="text-sm text-ngo-green font-medium mb-3">{member.role}</p>
+   862→                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+   863→                  {member.bio}
+   864→                </p>
+   865→              </CardContent>
+   866→            </Card>
+   867→          </motion.div>
+   868→        ))}
+   869→      </div>
+   870→    </SectionContainer>
+   871→  );
+   872→}
+   873→
+   874→/* ─────────────────────── TESTIMONIALS ─────────────────────── */
+   875→
+   876→function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
+   877→  const [active, setActive] = useState(0);
+   878→
+   879→  const next = useCallback(() => {
+   880→    setActive((prev) => (prev + 1) % testimonials.length);
+   881→  }, [testimonials.length]);
+   882→
+   883→  useEffect(() => {
+   884→    const timer = setInterval(next, 6000);
+   885→    return () => clearInterval(timer);
+   886→  }, [next]);
+   887→
+   888→  if (testimonials.length === 0) return null;
+   889→
+   890→  const t = testimonials[active];
+   891→
+   892→  return (
+   893→    <SectionContainer id="testimonials" className="bg-gradient-to-br from-ngo-teal to-ngo-green text-white relative overflow-hidden">
+   894→      <div className="absolute top-10 right-10 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+   895→      <div className="absolute bottom-10 left-10 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
+   896→
+   897→      <div className="relative z-10">
+   898→        <SectionHeading
+   899→          tag="Testimonials"
+   900→          title="Voices of Impact"
+   901→          subtitle="Hear from the people whose lives have been touched by our work — donors, volunteers, and community members share their experiences."
+   902→        />
+   903→
+   904→        <div className="max-w-3xl mx-auto">
+   905→          <AnimatePresence mode="wait">
+   906→            <motion.div
+   907→              key={active}
+   908→              initial={{ opacity: 0, y: 20 }}
+   909→              animate={{ opacity: 1, y: 0 }}
+   910→              exit={{ opacity: 0, y: -20 }}
+   911→              transition={{ duration: 0.4 }}
+   912→              className="text-center"
+   913→            >
+   914→              <div className="flex justify-center mb-4">
+   915→                {[...Array(5)].map((_, i) => (
+   916→                  <Star key={i} className="h-5 w-5 fill-ngo-amber text-ngo-amber" />
+   917→                ))}
+   918→              </div>
+   919→              <blockquote className="text-lg sm:text-xl leading-relaxed text-white/90 mb-8 italic">
+   920→                &ldquo;{t.content}&rdquo;
+   921→              </blockquote>
+   922→              <div className="flex items-center justify-center gap-3">
+   923→                <Avatar className="h-12 w-12 ring-2 ring-white/30">
+   924→                  <AvatarFallback className="bg-white/20 text-white font-semibold">
+   925→                    {t.name.split(' ').map((n) => n[0]).join('')}
+   926→                  </AvatarFallback>
+   927→                </Avatar>
+   928→                <div className="text-left">
+   929→                  <p className="font-semibold text-white">{t.name}</p>
+   930→                  <p className="text-sm text-white/70">{t.role}</p>
+   931→                </div>
+   932→              </div>
+   933→            </motion.div>
+   934→          </AnimatePresence>
+   935→
+   936→          <div className="flex justify-center gap-2 mt-8">
+   937→            {testimonials.map((_, i) => (
+   938→              <button
+   939→                key={i}
+   940→                onClick={() => setActive(i)}
+   941→                className={`w-2.5 h-2.5 rounded-full transition-all ${
+   942→                  i === active ? 'bg-white w-8' : 'bg-white/40 hover:bg-white/60'
+   943→                }`}
+   944→                aria-label={`Go to testimonial ${i + 1}`}
+   945→              />
+   946→            ))}
+   947→          </div>
+   948→        </div>
+   949→      </div>
+   950→    </SectionContainer>
+   951→  );
+   952→}
+   953→
+   954→/* ─────────────────────── DONATE ─────────────────────── */
+   955→
+   956→function DonateSection({ causes }: { causes: Cause[] }) {
+   957→  const [selectedAmount, setSelectedAmount] = useState<number | null>(50);
+   958→  const [customAmount, setCustomAmount] = useState('');
+   959→  const [donorName, setDonorName] = useState('');
+   960→  const [donorEmail, setDonorEmail] = useState('');
+   961→  const [donorMessage, setDonorMessage] = useState('');
+   962→  const [selectedCause, setSelectedCause] = useState('');
+   963→  const [submitting, setSubmitting] = useState(false);
+   964→  const [success, setSuccess] = useState(false);
+   965→  const [error, setError] = useState('');
+   966→
+   967→  const presetAmounts = [25, 50, 100, 250, 500];
+   968→
+   969→  const handleSubmit = async (e: FormEvent) => {
+   970→    e.preventDefault();
+   971→    setError('');
+   972→    setSubmitting(true);
+   973→
+   974→    const amount = customAmount ? parseFloat(customAmount) : selectedAmount;
+   975→    if (!amount || amount <= 0 || !donorName || !donorEmail) {
+   976→      setError('Please fill in all required fields with valid values.');
+   977→      setSubmitting(false);
+   978→      return;
+   979→    }
+   980→
+   981→    try {
+   982→      const res = await fetch('/api/donate', {
+   983→        method: 'POST',
+   984→        headers: { 'Content-Type': 'application/json' },
+   985→        body: JSON.stringify({
+   986→          name: donorName,
+   987→          email: donorEmail,
+   988→          amount,
+   989→          causeId: selectedCause || undefined,
+   990→          message: donorMessage || undefined,
+   991→        }),
+   992→      });
+   993→      const data = await res.json();
+   994→      if (!res.ok && !data.success) {
+   995→        setError(data.errors?.[0]?.message || 'Something went wrong. Please try again.');
+   996→      } else {
+   997→        setSuccess(true);
+   998→        setDonorName('');
+   999→        setDonorEmail('');
+  1000→        setDonorMessage('');
+  1001→        setCustomAmount('');
+  1002→        setSelectedAmount(50);
+  1003→        setSelectedCause('');
+  1004→      }
+  1005→    } catch {
+  1006→      setError('Network error. Please try again.');
+  1007→    } finally {
+  1008→      setSubmitting(false);
+  1009→    }
+  1010→  };
+  1011→
+  1012→  return (
+  1013→    <SectionContainer id="donate">
+  1014→      <SectionHeading
+  1015→        tag="Make a Difference"
+  1016→        title="Your Generosity Changes Lives"
+  1017→        subtitle="Every contribution, no matter the size, directly funds our programs on the ground. Choose an amount and cause that speaks to you."
+  1018→      />
+  1019→
+  1020→      <motion.div
+  1021→        initial={{ opacity: 0, y: 30 }}
+  1022→        whileInView={{ opacity: 1, y: 0 }}
+  1023→        viewport={{ once: true }}
+  1024→        transition={{ duration: 0.6 }}
+  1025→        className="max-w-2xl mx-auto"
+  1026→      >
+  1027→        <Card className="border-0 shadow-xl">
+  1028→          <CardHeader className="bg-ngo-green-50 rounded-t-xl p-6">
+  1029→            <CardTitle className="flex items-center gap-2 text-ngo-green text-xl">
+  1030→              <Heart className="h-5 w-5" />
+  1031→              Donate Now
+  1032→            </CardTitle>
+  1033→          </CardHeader>
+  1034→          <CardContent className="p-6">
+  1035→            {success ? (
+  1036→              <motion.div
+  1037→                initial={{ opacity: 0, scale: 0.95 }}
+  1038→                animate={{ opacity: 1, scale: 1 }}
+  1039→                className="text-center py-8"
+  1040→              >
+  1041→                <div className="w-16 h-16 rounded-full bg-ngo-green-50 text-ngo-green flex items-center justify-center mx-auto mb-4">
+  1042→                  <Heart className="h-8 w-8" />
+  1043→                </div>
+  1044→                <h3 className="text-xl font-bold text-foreground mb-2">Thank You!</h3>
+  1045→                <p className="text-muted-foreground">
+  1046→                  Your generous donation has been received. You will receive a confirmation email
+  1047→                  shortly. Together, we are making a difference.
+  1048→                </p>
+  1049→                <Button
+  1050→                  variant="outline"
+  1051→                  className="mt-6"
+  1052→                  onClick={() => setSuccess(false)}
+  1053→                >
+  1054→                  Make Another Donation
+  1055→                </Button>
+  1056→              </motion.div>
+  1057→            ) : (
+  1058→              <form onSubmit={handleSubmit} className="space-y-5">
+  1059→                {/* Amount Selection */}
+  1060→                <div>
+  1061→                  <label className="block text-sm font-medium text-foreground mb-2">
+  1062→                    Select Amount
+  1063→                  </label>
+  1064→                  <div className="grid grid-cols-5 gap-2 mb-3">
+  1065→                    {presetAmounts.map((amt) => (
+  1066→                      <button
+  1067→                        key={amt}
+  1068→                        type="button"
+  1069→                        onClick={() => {
+  1070→                          setSelectedAmount(amt);
+  1071→                          setCustomAmount('');
+  1072→                        }}
+  1073→                        className={`py-2.5 rounded-lg text-sm font-semibold transition-all border-2 ${
+  1074→                          selectedAmount === amt && !customAmount
+  1075→                            ? 'border-ngo-green bg-ngo-green text-white'
+  1076→                            : 'border-border bg-white text-foreground hover:border-ngo-green/50'
+  1077→                        }`}
+  1078→                      >
+  1079→                        ${amt}
+  1080→                      </button>
+  1081→                    ))}
+  1082→                  </div>
+  1083→                  <Input
+  1084→                    type="number"
+  1085→                    placeholder="Or enter a custom amount"
+  1086→                    value={customAmount}
+  1087→                    onChange={(e) => {
+  1088→                      setCustomAmount(e.target.value);
+  1089→                      if (e.target.value) setSelectedAmount(null);
+  1090→                    }}
+  1091→                    min="1"
+  1092→                    className="mt-1"
+  1093→                  />
+  1094→                </div>
+  1095→
+  1096→                {/* Cause Selection */}
+  1097→                <div>
+  1098→                  <label className="block text-sm font-medium text-foreground mb-2">
+  1099→                    Designate a Cause (Optional)
+  1100→                  </label>
+  1101→                  <select
+  1102→                    value={selectedCause}
+  1103→                    onChange={(e) => setSelectedCause(e.target.value)}
+  1104→                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+  1105→                  >
+  1106→                    <option value="">General Fund</option>
+  1107→                    {causes.map((c) => (
+  1108→                      <option key={c.id} value={c.id}>
+  1109→                        {c.title}
+  1110→                      </option>
+  1111→                    ))}
+  1112→                  </select>
+  1113→                </div>
+  1114→
+  1115→                <Separator />
+  1116→
+  1117→                {/* Donor Info */}
+  1118→                <div className="grid sm:grid-cols-2 gap-4">
+  1119→                  <div>
+  1120→                    <label className="block text-sm font-medium text-foreground mb-1.5">
+  1121→                      Full Name *
+  1122→                    </label>
+  1123→                    <Input
+  1124→                      value={donorName}
+  1125→                      onChange={(e) => setDonorName(e.target.value)}
+  1126→                      placeholder="John Smith"
+  1127→                      required
+  1128→                    />
+  1129→                  </div>
+  1130→                  <div>
+  1131→                    <label className="block text-sm font-medium text-foreground mb-1.5">
+  1132→                      Email Address *
+  1133→                    </label>
+  1134→                    <Input
+  1135→                      type="email"
+  1136→                      value={donorEmail}
+  1137→                      onChange={(e) => setDonorEmail(e.target.value)}
+  1138→                      placeholder="john@example.com"
+  1139→                      required
+  1140→                    />
+  1141→                  </div>
+  1142→                </div>
+  1143→
+  1144→                <div>
+  1145→                  <label className="block text-sm font-medium text-foreground mb-1.5">
+  1146→                    Message (Optional)
+  1147→                  </label>
+  1148→                  <Textarea
+  1149→                    value={donorMessage}
+  1150→                    onChange={(e) => setDonorMessage(e.target.value)}
+  1151→                    placeholder="Leave an encouraging message..."
+  1152→                    rows={2}
+  1153→                  />
+  1154→                </div>
+  1155→
+  1156→                {error && (
+  1157→                  <p className="text-sm text-destructive font-medium">{error}</p>
+  1158→                )}
+  1159→
+  1160→                <Button
+  1161→                  type="submit"
+  1162→                  size="lg"
+  1163→                  className="w-full bg-ngo-green hover:bg-ngo-green-light text-white h-12 text-base font-semibold"
+  1164→                  disabled={submitting}
+  1165→                >
+  1166→                  {submitting ? (
+  1167→                    <span className="flex items-center gap-2">
+  1168→                      <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+  1169→                      Processing...
+  1170→                    </span>
+  1171→                  ) : (
+  1172→                    <>
+  1173→                      <Heart className="h-5 w-5 mr-2" />
+  1174→                      Complete Donation
+  1175→                    </>
+  1176→                  )}
+  1177→                </Button>
+  1178→
+  1179→                <p className="text-xs text-center text-muted-foreground">
+  1180→                  Your payment information is secure. 97% of your donation goes directly to programs.
+  1181→                </p>
+  1182→              </form>
+  1183→            )}
+  1184→          </CardContent>
+  1185→        </Card>
+  1186→      </motion.div>
+  1187→    </SectionContainer>
+  1188→  );
+  1189→}
+  1190→
+  1191→/* ─────────────────────── NEWSLETTER / CONTACT ─────────────────────── */
+  1192→
+  1193→function ContactSection() {
+  1194→  const [email, setEmail] = useState('');
+  1195→  const [subscribing, setSubscribing] = useState(false);
+  1196→  const [subSuccess, setSubSuccess] = useState('');
+  1197→
+  1198→  const [contactName, setContactName] = useState('');
+  1199→  const [contactEmail, setContactEmail] = useState('');
+  1200→  const [contactSubject, setContactSubject] = useState('');
+  1201→  const [contactMessage, setContactMessage] = useState('');
+  1202→  const [contactSubmitting, setContactSubmitting] = useState(false);
+  1203→  const [contactSuccess, setContactSuccess] = useState(false);
+  1204→  const [contactError, setContactError] = useState('');
+  1205→
+  1206→  const handleSubscribe = async (e: FormEvent) => {
+  1207→    e.preventDefault();
+  1208→    if (!email) return;
+  1209→    setSubscribing(true);
+  1210→    try {
+  1211→      const res = await fetch('/api/subscribe', {
+  1212→        method: 'POST',
+  1213→        headers: { 'Content-Type': 'application/json' },
+  1214→        body: JSON.stringify({ email }),
+  1215→      });
+  1216→      const data = await res.json();
+  1217→      if (data.success) {
+  1218→        setSubSuccess(data.message || 'Thank you for subscribing!');
+  1219→        setEmail('');
+  1220→        setTimeout(() => setSubSuccess(''), 5000);
+  1221→      }
+  1222→    } catch {
+  1223→      setSubSuccess('');
+  1224→    } finally {
+  1225→      setSubscribing(false);
+  1226→    }
+  1227→  };
+  1228→
+  1229→  const handleContact = async (e: FormEvent) => {
+  1230→    e.preventDefault();
+  1231→    setContactError('');
+  1232→    setContactSubmitting(true);
+  1233→    try {
+  1234→      const res = await fetch('/api/contact', {
+  1235→        method: 'POST',
+  1236→        headers: { 'Content-Type': 'application/json' },
+  1237→        body: JSON.stringify({
+  1238→          name: contactName,
+  1239→          email: contactEmail,
+  1240→          subject: contactSubject,
+  1241→          message: contactMessage,
+  1242→        }),
+  1243→      });
+  1244→      const data = await res.json();
+  1245→      if (!res.ok && !data.success) {
+  1246→        setContactError(data.errors?.[0]?.message || 'Something went wrong.');
+  1247→      } else {
+  1248→        setContactSuccess(true);
+  1249→        setContactName('');
+  1250→        setContactEmail('');
+  1251→        setContactSubject('');
+  1252→        setContactMessage('');
+  1253→      }
+  1254→    } catch {
+  1255→      setContactError('Network error. Please try again.');
+  1256→    } finally {
+  1257→      setContactSubmitting(false);
+  1258→    }
+  1259→  };
+  1260→
+  1261→  return (
+  1262→    <SectionContainer id="contact" className="bg-muted/30">
+  1263→      <SectionHeading
+  1264→        tag="Get Involved"
+  1265→        title="Join Our Movement"
+  1266→        subtitle="Whether you want to volunteer, partner with us, or simply stay informed — we would love to hear from you."
+  1267→      />
+  1268→
+  1269→      <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+  1270→        {/* Newsletter */}
+  1271→        <motion.div
+  1272→          initial={{ opacity: 0, x: -30 }}
+  1273→          whileInView={{ opacity: 1, x: 0 }}
+  1274→          viewport={{ once: true }}
+  1275→          transition={{ duration: 0.6 }}
+  1276→        >
+  1277→          <Card className="h-full border-0 shadow-md">
+  1278→            <CardContent className="p-6 sm:p-8">
+  1279→              <div className="w-12 h-12 rounded-xl bg-ngo-green-50 text-ngo-green flex items-center justify-center mb-4">
+  1280→                <Send className="h-6 w-6" />
+  1281→              </div>
+  1282→              <h3 className="text-xl font-bold text-foreground mb-2">Stay Informed</h3>
+  1283→              <p className="text-muted-foreground mb-6 leading-relaxed">
+  1284→                Subscribe to our newsletter for monthly impact updates, event invitations, and
+  1285→                stories from the communities we serve. No spam — just meaningful updates about the
+  1286→                change you are helping to create.
+  1287→              </p>
+  1288→
+  1289→              {subSuccess ? (
+  1290→                <div className="bg-ngo-green-50 text-ngo-green p-4 rounded-lg text-sm font-medium">
+  1291→                  {subSuccess}
+  1292→                </div>
+  1293→              ) : (
+  1294→                <form onSubmit={handleSubscribe} className="flex gap-2">
+  1295→                  <Input
+  1296→                    type="email"
+  1297→                    placeholder="Enter your email"
+  1298→                    value={email}
+  1299→                    onChange={(e) => setEmail(e.target.value)}
+  1300→                    required
+  1301→                    className="flex-1"
+  1302→                  />
+  1303→                  <Button
+  1304→                    type="submit"
+  1305→                    className="bg-ngo-green hover:bg-ngo-green-light text-white whitespace-nowrap"
+  1306→                    disabled={subscribing}
+  1307→                  >
+  1308→                    {subscribing ? 'Subscribing...' : 'Subscribe'}
+  1309→                  </Button>
+  1310→                </form>
+  1311→              )}
+  1312→
+  1313→              <div className="mt-8 space-y-3">
+  1314→                <h4 className="font-semibold text-sm text-foreground">What you will receive:</h4>
+  1315→                {[
+  1316→                  'Monthly impact reports with real stories',
+  1317→                  'First access to event registrations',
+  1318→                  'Volunteer opportunity alerts',
+  1319→                  'Annual financial transparency report',
+  1320→                ].map((item) => (
+  1321→                  <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+  1322→                    <Leaf className="h-4 w-4 text-ngo-green mt-0.5 flex-shrink-0" />
+  1323→                    {item}
+  1324→                  </div>
+  1325→                ))}
+  1326→              </div>
+  1327→            </CardContent>
+  1328→          </Card>
+  1329→        </motion.div>
+  1330→
+  1331→        {/* Contact Form */}
+  1332→        <motion.div
+  1333→          initial={{ opacity: 0, x: 30 }}
+  1334→          whileInView={{ opacity: 1, x: 0 }}
+  1335→          viewport={{ once: true }}
+  1336→          transition={{ duration: 0.6, delay: 0.1 }}
+  1337→        >
+  1338→          <Card className="h-full border-0 shadow-md" id="volunteer">
+  1339→            <CardContent className="p-6 sm:p-8">
+  1340→              <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+  1341→                <Users className="h-6 w-6" />
+  1342→              </div>
+  1343→              <h3 className="text-xl font-bold text-foreground mb-2">Contact Us</h3>
+  1344→              <p className="text-muted-foreground mb-6 leading-relaxed">
+  1345→                Have questions about volunteering, partnerships, or our programs? Reach out and our
+  1346→                team will respond within 24 hours.
+  1347→              </p>
+  1348→
+  1349→              {contactSuccess ? (
+  1350→                <motion.div
+  1351→                  initial={{ opacity: 0, scale: 0.95 }}
+  1352→                  animate={{ opacity: 1, scale: 1 }}
+  1353→                  className="text-center py-8"
+  1354→                >
+  1355→                  <div className="w-14 h-14 rounded-full bg-ngo-green-50 text-ngo-green flex items-center justify-center mx-auto mb-3">
+  1356→                    <Send className="h-6 w-6" />
+  1357→                  </div>
+  1358→                  <h4 className="font-bold text-foreground mb-1">Message Sent!</h4>
+  1359→                  <p className="text-sm text-muted-foreground">
+  1360→                    We will get back to you within 24 hours.
+  1361→                  </p>
+  1362→                  <Button variant="outline" className="mt-4" onClick={() => setContactSuccess(false)}>
+  1363→                    Send Another Message
+  1364→                  </Button>
+  1365→                </motion.div>
+  1366→              ) : (
+  1367→                <form onSubmit={handleContact} className="space-y-4">
+  1368→                  <div className="grid sm:grid-cols-2 gap-4">
+  1369→                    <div>
+  1370→                      <label className="block text-sm font-medium text-foreground mb-1.5">Name *</label>
+  1371→                      <Input
+  1372→                        value={contactName}
+  1373→                        onChange={(e) => setContactName(e.target.value)}
+  1374→                        placeholder="Your name"
+  1375→                        required
+  1376→                      />
+  1377→                    </div>
+  1378→                    <div>
+  1379→                      <label className="block text-sm font-medium text-foreground mb-1.5">Email *</label>
+  1380→                      <Input
+  1381→                        type="email"
+  1382→                        value={contactEmail}
+  1383→                        onChange={(e) => setContactEmail(e.target.value)}
+  1384→                        placeholder="your@email.com"
+  1385→                        required
+  1386→                      />
+  1387→                    </div>
+  1388→                  </div>
+  1389→                  <div>
+  1390→                    <label className="block text-sm font-medium text-foreground mb-1.5">Subject *</label>
+  1391→                    <Input
+  1392→                      value={contactSubject}
+  1393→                      onChange={(e) => setContactSubject(e.target.value)}
+  1394→                      placeholder="How can we help?"
+  1395→                      required
+  1396→                    />
+  1397→                  </div>
+  1398→                  <div>
+  1399→                    <label className="block text-sm font-medium text-foreground mb-1.5">Message *</label>
+  1400→                    <Textarea
+  1401→                      value={contactMessage}
+  1402→                      onChange={(e) => setContactMessage(e.target.value)}
+  1403→                      placeholder="Tell us more about your inquiry..."
+  1404→                      rows={4}
+  1405→                      required
+  1406→                    />
+  1407→                  </div>
+  1408→                  {contactError && (
+  1409→                    <p className="text-sm text-destructive font-medium">{contactError}</p>
+  1410→                  )}
+  1411→                  <Button
+  1412→                    type="submit"
+  1413→                    className="w-full bg-ngo-green hover:bg-ngo-green-light text-white"
+  1414→                    disabled={contactSubmitting}
+  1415→                  >
+  1416→                    {contactSubmitting ? (
+  1417→                      <span className="flex items-center gap-2">
+  1418→                        <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+  1419→                        Sending...
+  1420→                      </span>
+  1421→                    ) : (
+  1422→                      <>
+  1423→                        <Send className="h-4 w-4 mr-2" />
+  1424→                        Send Message
+  1425→                      </>
+  1426→                    )}
+  1427→                  </Button>
+  1428→                </form>
+  1429→              )}
+  1430→            </CardContent>
+  1431→          </Card>
+  1432→        </motion.div>
+  1433→      </div>
+  1434→    </SectionContainer>
+  1435→  );
+  1436→}
+  1437→
+  1438→/* ─────────────────────── VOLUNTEER CTA BANNER ─────────────────────── */
+  1439→
+  1440→function VolunteerBanner() {
+  1441→  return (
+  1442→    <section className="relative py-16 md:py-20 overflow-hidden">
+  1443→      <div className="absolute inset-0 bg-gradient-to-r from-ngo-green to-ngo-teal" />
+  1444→      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
+  1445→      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+  1446→        <motion.div
+  1447→          initial={{ opacity: 0, y: 20 }}
+  1448→          whileInView={{ opacity: 1, y: 0 }}
+  1449→          viewport={{ once: true }}
+  1450→          transition={{ duration: 0.6 }}
+  1451→        >
+  1452→          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+  1453→            Ready to Make an Impact?
+  1454→          </h2>
+  1455→          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
+  1456→            Whether you volunteer your time, donate resources, or simply spread the word — every
+  1457→            action counts. Join our global community of changemakers today.
+  1458→          </p>
+  1459→          <div className="flex flex-wrap justify-center gap-4">
+  1460→            <Button
+  1461→              size="lg"
+  1462→              className="bg-white text-ngo-green hover:bg-white/90 px-8 h-12 text-base font-semibold"
+  1463→              onClick={() => document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' })}
+  1464→            >
+  1465→              <Heart className="h-5 w-5 mr-2" />
+  1466→              Start Donating
+  1467→            </Button>
+  1468→            <Button
+  1469→              size="lg"
+  1470→              variant="outline"
+  1471→              className="border-white/30 text-white hover:bg-white/10 px-8 h-12 text-base font-semibold"
+  1472→              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+  1473→            >
+  1474→              <Users className="h-5 w-5 mr-2" />
+  1475→              Become a Volunteer
+  1476→            </Button>
+  1477→          </div>
+  1478→        </motion.div>
+  1479→      </div>
+  1480→    </section>
+  1481→  );
+  1482→}
+  1483→
+  1484→/* ─────────────────────── FOOTER ─────────────────────── */
+  1485→
+  1486→function Footer() {
+  1487→  const [showScrollTop, setShowScrollTop] = useState(false);
+  1488→
+  1489→  useEffect(() => {
+  1490→    const onScroll = () => setShowScrollTop(window.scrollY > 400);
+  1491→    window.addEventListener('scroll', onScroll, { passive: true });
+  1492→    return () => window.removeEventListener('scroll', onScroll);
+  1493→  }, []);
+  1494→
+  1495→  const footerLinks = {
+  1496→    'Our Work': ['Clean Water', 'Education', 'Environment', 'Healthcare', 'Emergency Relief'],
+  1497→    'Get Involved': ['Donate', 'Volunteer', 'Partner With Us', 'Corporate Giving', 'Fundraise'],
+  1498→    'About': ['Our Story', 'Team', 'Financial Reports', 'Careers', 'Press'],
+  1499→    'Resources': ['Blog', 'Annual Report', 'FAQ', 'Privacy Policy', 'Terms of Use'],
+  1500→  };
+  1501→
+  1502→  return (
+  1503→    <footer className="bg-ngo-teal text-white">
+  1504→      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+  1505→        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+  1506→          {/* Brand */}
+  1507→          <div className="col-span-2 md:col-span-1">
+  1508→            <div className="flex items-center gap-2 mb-4">
+  1509→              <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+  1510→                <Leaf className="h-5 w-5 text-white" />
+  1511→              </div>
+  1512→              <span className="text-lg font-bold">GreenHope</span>
+  1513→            </div>
+  1514→            <p className="text-sm text-white/60 leading-relaxed mb-4">
+  1515→              Creating sustainable change through environmental conservation, education, and community
+  1516→              empowerment since 2012.
+  1517→            </p>
+  1518→            <div className="flex items-center gap-2 text-sm text-white/60">
+  1519→              <MapPin className="h-4 w-4" />
+  1520→              123 Hope Street, New York, NY 10001
+  1521→            </div>
+  1522→          </div>
+  1523→
+  1524→          {/* Link Columns */}
+  1525→          {Object.entries(footerLinks).map(([title, links]) => (
+  1526→            <div key={title}>
+  1527→              <h4 className="font-semibold text-sm mb-4 text-white">{title}</h4>
+  1528→              <ul className="space-y-2.5">
+  1529→                {links.map((link) => (
+  1530→                  <li key={link}>
+  1531→                    <a
+  1532→                      href="#"
+  1533→                      className="text-sm text-white/60 hover:text-white transition-colors"
+  1534→                    >
+  1535→                      {link}
+  1536→                    </a>
+  1537→                  </li>
+  1538→                ))}
+  1539→              </ul>
+  1540→            </div>
+  1541→          ))}
+  1542→        </div>
+  1543→
+  1544→        <Separator className="my-8 bg-white/10" />
+  1545→
+  1546→        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/50">
+  1547→          <p>&copy; 2026 GreenHope Foundation. All rights reserved.</p>
+  1548→          <p>
+  1549→            A registered 501(c)(3) nonprofit. EIN: 12-3456789
+  1550→          </p>
+  1551→        </div>
+  1552→      </div>
+  1553→
+  1554→      {/* Scroll to top */}
+  1555→      <AnimatePresence>
+  1556→        {showScrollTop && (
+  1557→          <motion.button
+  1558→            initial={{ opacity: 0, y: 10 }}
+  1559→            animate={{ opacity: 1, y: 0 }}
+  1560→            exit={{ opacity: 0, y: 10 }}
+  1561→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  1562→            className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full bg-ngo-green text-white shadow-lg hover:bg-ngo-green-light transition-colors flex items-center justify-center"
+  1563→            aria-label="Scroll to top"
+  1564→          >
+  1565→            <ChevronUp className="h-5 w-5" />
+  1566→          </motion.button>
+  1567→        )}
+  1568→      </AnimatePresence>
+  1569→    </footer>
+  1570→  );
+  1571→}
+  1572→
+  1573→/* ─────────────────────── MAIN PAGE ─────────────────────── */
+  1574→
+  1575→export default function Home() {
+  1576→  const [causes, setCauses] = useState<Cause[]>([]);
+  1577→  const [events, setEvents] = useState<Event[]>([]);
+  1578→  const [team, setTeam] = useState<TeamMember[]>([]);
+  1579→  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  1580→  const [stats, setStats] = useState<Stats>({
+  1581→    fundsRaised: 2450000,
+  1582→    donors: 18500,
+  1583→    projects: 6,
+  1584→    volunteers: 3000,
+  1585→    countries: 23,
+  1586→  });
+  1587→  const [loading, setLoading] = useState(true);
+  1588→
+  1589→  useEffect(() => {
+  1590→    async function fetchData() {
+  1591→      try {
+  1592→        const [causesRes, eventsRes, teamRes, testimonialsRes, statsRes] = await Promise.all([
+  1593→          fetch('/api/causes'),
+  1594→          fetch('/api/events'),
+  1595→          fetch('/api/team'),
+  1596→          fetch('/api/testimonials'),
+  1597→          fetch('/api/stats'),
+  1598→        ]);
+  1599→
+  1600→        const [causesData, eventsData, teamData, testimonialsData, statsData] = await Promise.all([
+  1601→          causesRes.json(),
+  1602→          eventsRes.json(),
+  1603→          teamRes.json(),
+  1604→          testimonialsRes.json(),
+  1605→          statsRes.json(),
+  1606→        ]);
+  1607→
+  1608→        setCauses(causesData);
+  1609→        setEvents(eventsData);
+  1610→        setTeam(teamData);
+  1611→        setTestimonials(testimonialsData);
+  1612→        if (statsData.fundsRaised) setStats(statsData);
+  1613→      } catch (err) {
+  1614→        console.error('Failed to fetch data:', err);
+  1615→      } finally {
+  1616→        setLoading(false);
+  1617→      }
+  1618→    }
+  1619→    fetchData();
+  1620→  }, []);
+  1621→
+  1622→  if (loading) {
+  1623→    return (
+  1624→      <div className="min-h-screen flex items-center justify-center">
+  1625→        <div className="flex flex-col items-center gap-4">
+  1626→          <div className="w-12 h-12 rounded-full border-4 border-ngo-green/20 border-t-ngo-green animate-spin" />
+  1627→          <p className="text-muted-foreground text-sm">Loading...</p>
+  1628→        </div>
+  1629→      </div>
+  1630→    );
+  1631→  }
+  1632→
+  1633→  return (
+  1634→    <div className="min-h-screen flex flex-col">
+  1635→      <Navbar />
+  1636→      <main className="flex-1">
+  1637→        <HeroSection />
+  1638→        <AboutSection />
+  1639→        <CausesSection causes={causes} />
+  1640→        <ImpactSection stats={stats} />
+  1641→        <EventsSection events={events} />
+  1642→        <TeamSection team={team} />
+  1643→        <TestimonialsSection testimonials={testimonials} />
+  1644→        <DonateSection causes={causes} />
+  1645→        <VolunteerBanner />
+  1646→        <ContactSection />
+  1647→      </main>
+  1648→      <Footer />
+  1649→    </div>
+  1650→  );
+  1651→}
