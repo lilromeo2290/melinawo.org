@@ -9,7 +9,7 @@ async function seed() {
   const causes = [
     {
       title: 'Health Awareness, Screening & Empowerment',
-      description: '',
+      description: 'Our mission is to improve the health and well-being of individuals and communities by promoting health education, preventive care, early disease detection, and empowering people with the knowledge and resources needed to make informed health decisions. We are committed to ensuring that quality health information and essential screening services are accessible to all, especially vulnerable and underserved populations.',
       image: '/causes/health-awareness.jpg',
       raised: 42000,
       goal: 65000,
