@@ -9,7 +9,7 @@ async function seed() {
   const causes = [
     {
       title: 'Health Awareness, Screening & Empowerment',
-      description: 'Providing comprehensive health education, community screening programs, and empowerment initiatives to underserved populations. We conduct regular health screenings, distribute vital health information, and train community health workers to sustain long-term wellness outcomes.',
+      description: '',
       image: '/causes/health-awareness.jpg',
       raised: 42000,
       goal: 65000,
@@ -18,7 +18,7 @@ async function seed() {
     },
     {
       title: "Women's Health & Endometriosis Awareness",
-      description: 'Breaking the silence around endometriosis and women\'s health issues through awareness campaigns, free screening programs, and support networks. We partner with medical professionals to provide early diagnosis, treatment access, and emotional support for women affected by this condition.',
+      description: '',
       image: '/causes/womens-health.jpg',
       raised: 31500,
       goal: 50000,
