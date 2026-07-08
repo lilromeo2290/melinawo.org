@@ -194,7 +194,6 @@ function Navbar() {
     { label: 'Mission & Vision', href: '#mission-vision' },
     { label: 'Core Values', href: '#core-values' },
     { label: 'Team & Leadership', href: '#team' },
-    { label: 'Board Members', href: '#team' },
   ];
 
   const programsSubmenu = [
@@ -1763,7 +1762,6 @@ export default function Home() {
         <AboutSection />
         <EventsSection events={events} />
         <TeamSection team={team} />
-        <TestimonialsSection testimonials={testimonials} />
         <DonateSection causes={causes} />
         <VolunteerBanner />
         <ContactSection />
