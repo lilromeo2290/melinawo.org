@@ -166,7 +166,9 @@ function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [programsOpen, setProgramsOpen] = useState(false);
   const aboutRef = useRef<HTMLDivElement>(null);
+  const programsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -174,11 +176,14 @@ function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (aboutRef.current && !aboutRef.current.contains(e.target as Node)) {
         setAboutOpen(false);
+      }
+      if (programsRef.current && !programsRef.current.contains(e.target as Node)) {
+        setProgramsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClick);
@@ -192,10 +197,15 @@ function Navbar() {
     { label: 'Board Members', href: '#team' },
   ];
 
+  const programsSubmenu = [
+    { label: 'Health Awareness, Screening & Empowerment', href: '#causes' },
+    { label: "Women's Health & Endometriosis Awareness", href: '#causes' },
+  ];
+
   const links = [
     { label: 'Home', href: '#', key: 'home' },
     { label: 'About Us', href: '#about', key: 'about', submenu: aboutSubmenu },
-    { label: 'Programs', href: '#causes', key: 'programs' },
+    { label: 'Programs', href: '#causes', key: 'programs', submenu: programsSubmenu, dropdownRef: 'programs' },
     { label: 'Our Impact', href: '#impact', key: 'impact' },
     { label: 'Resources', href: '#team', key: 'resources' },
     { label: 'Gallery', href: '#events', key: 'gallery' },
@@ -223,29 +233,29 @@ function Navbar() {
         <div className="hidden md:flex items-center gap-1">
           {links.map((l) =>
             l.submenu ? (
-              <div key={l.key} className="relative" ref={aboutRef}>
+              <div key={l.key} className="relative" ref={l.key === 'about' ? aboutRef : programsRef}>
                 <button
-                  onClick={() => setAboutOpen(!aboutOpen)}
+                  onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
                   className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors inline-flex items-center gap-1"
                 >
                   {l.label}
-                  <ChevronUp className={`h-3 w-3 transition-transform ${aboutOpen ? 'rotate-180' : ''}`} />
+                  <ChevronUp className={`h-3 w-3 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
-                  {aboutOpen && (
+                  {(l.key === 'about' ? aboutOpen : programsOpen) && (
                     <motion.div
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -5 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 mt-1 w-52 bg-white rounded-lg shadow-lg border border-border py-1.5 z-50"
+                      className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-border py-1.5 z-50"
                     >
                       {l.submenu.map((sub) => (
                         <a
                           key={sub.label}
                           href={sub.href}
                           className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                          onClick={() => setAboutOpen(false)}
+                          onClick={() => { setAboutOpen(false); setProgramsOpen(false); }}
                         >
                           {sub.label}
                         </a>
@@ -302,14 +312,14 @@ function Navbar() {
                 l.submenu ? (
                   <div key={l.key}>
                     <button
-                      onClick={() => setAboutOpen(!aboutOpen)}
+                      onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
                       className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                     >
                       {l.label}
-                      <ChevronUp className={`h-4 w-4 transition-transform ${aboutOpen ? 'rotate-180' : ''}`} />
+                      <ChevronUp className={`h-4 w-4 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
                     </button>
                     <AnimatePresence>
-                      {aboutOpen && (
+                      {(l.key === 'about' ? aboutOpen : programsOpen) && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
@@ -320,7 +330,7 @@ function Navbar() {
                             <a
                               key={sub.label}
                               href={sub.href}
-                              onClick={() => setMobileOpen(false)}
+                              onClick={() => { setMobileOpen(false); setAboutOpen(false); setProgramsOpen(false); }}
                               className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                             >
                               {sub.label}
