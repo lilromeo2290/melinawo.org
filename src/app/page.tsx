@@ -577,20 +577,18 @@ function AboutSection() {
           transition={{ duration: 0.6 }}
           className="space-y-4"
         >
-          <h3 className="text-2xl font-bold text-foreground">Who We Are</h3>
+          <h3 className="text-2xl font-bold text-foreground">About Melinawo Foundation</h3>
           <p className="text-muted-foreground leading-relaxed">
-            Founded in 2012, MELINAWO FOUNDATION has grown from a small volunteer group into a
-            global non-profit operating in 23 countries. Our holistic approach addresses the
-            interconnected challenges of poverty, lack of education, and limited access to
-            basic services by working directly with communities to design and implement sustainable
-            solutions.
+            Melinawo Foundation is a registered non-governmental organization (NGO) based in Ghana, dedicated to improving the health and well-being of vulnerable individuals and underserved communities. Established with the mission of bringing quality healthcare closer to those who need it most, the Foundation provides health education, free medical screenings, support services, and life-changing surgical interventions for underprivileged populations.
           </p>
           <p className="text-muted-foreground leading-relaxed">
-            We measure our success not just in numbers, but in the lasting, positive change we see
-            in the lives of individuals and communities. Every project we undertake is designed to
-            build local capacity, so that progress continues long after our direct involvement ends.
-            Our team of 200+ professionals and 3,000+ volunteers worldwide are united by a shared
-            commitment to dignity, equity, and community empowerment.
+            A key area of focus for Melinawo Foundation is women's health, with a strong commitment to raising awareness and providing support for individuals living with endometriosis. Through community outreach, education, advocacy, and strategic partnerships, the Foundation works to dispel myths and misconceptions surrounding endometriosis, promote early diagnosis, and improve access to timely, appropriate, and affordable medical care. The Foundation also champions the rights and well-being of women affected by the condition, helping them live healthier and more empowered lives.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Over the years, Melinawo Foundation has collaborated with healthcare professionals, volunteers, development partners, and community leaders to organize medical outreaches, health fairs, awareness campaigns, and surgical missions that have transformed countless lives. These initiatives reflect the Foundation's unwavering belief that quality healthcare is a fundamental human right and should be accessible to everyone, regardless of their socio-economic background.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Driven by compassion, integrity, and a commitment to sustainable impact, Melinawo Foundation continues to empower communities through preventive healthcare, advocacy, and life-changing medical interventions, creating healthier futures for individuals and families across Ghana.
           </p>
           <div className="flex items-center gap-4 pt-2">
             <div className="flex -space-x-2">
