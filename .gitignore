@@ -52,9 +52,9 @@ prompt
 server.log
 # Skills directory
 /skills/
-# database
-/db/
-*.db
+# database (keep custom.db tracked)
+# /db/
+# *.db
 
 # uploads
 /upload/
