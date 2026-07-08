@@ -1587,7 +1587,6 @@ function Footer() {
   }, []);
 
   const footerLinks = {
-    'Our Work': ['Clean Water', 'Education', 'Healthcare', 'Emergency Relief', 'Community Dev'],
     'Get Involved': ['Donate', 'Volunteer', 'Partner With Us', 'Corporate Giving', 'Fundraise'],
     'About': ['Our Story', 'Team', 'Financial Reports', 'Careers', 'Press'],
     'Resources': ['Blog', 'Annual Report', 'FAQ', 'Privacy Policy', 'Terms of Use'],
