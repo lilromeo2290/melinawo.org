@@ -197,8 +197,8 @@ function Navbar() {
   ];
 
   const programsSubmenu = [
-    { label: 'Health Awareness, Screening & Empowerment', href: '#causes' },
-    { label: "Women's Health & Endometriosis Awareness", href: '#causes' },
+    { label: 'Health Awareness, Screening & Empowerment', href: '/programs/health-awareness' },
+    { label: "Women's Health & Endometriosis Awareness", href: '/programs/womens-health' },
   ];
 
   const links = [
