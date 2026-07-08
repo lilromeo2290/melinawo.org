@@ -191,7 +191,7 @@ function Navbar() {
   }, []);
 
   const aboutSubmenu = [
-    { label: 'Mission & Vision', href: '#about' },
+    { label: 'Mission & Vision', href: '#mission-vision' },
     { label: 'Core Values', href: '#about' },
     { label: 'Team & Leadership', href: '#team' },
     { label: 'Board Members', href: '#team' },
@@ -607,28 +607,33 @@ function AboutSection() {
           </div>
         </motion.div>
 
+        {/* Mission & Vision */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.15 }}
           className="relative"
+          id="mission-vision"
         >
-          <div className="rounded-2xl bg-gradient-to-br from-ngo-green to-ngo-teal p-1">
-            <div className="rounded-xl bg-white p-6 h-full">
-              <div className="grid grid-cols-2 gap-4">
-                <MiniStat value="23" label="Countries" />
-                <MiniStat value="150+" label="Active Projects" />
-                <MiniStat value="2M+" label="Lives Impacted" />
-                <MiniStat value="97%" label="Funds to Programs" />
-              </div>
-              <div className="mt-6 p-4 bg-ngo-green-50 rounded-lg">
-                <p className="text-sm font-medium text-ngo-green mb-1">Our Promise</p>
-                <p className="text-sm text-muted-foreground">
-                  At least 97% of every dollar donated goes directly to our programs on the ground.
-                  We maintain the highest standards of financial transparency and accountability.
-                </p>
-              </div>
+          <div className="space-y-6">
+            <div className="rounded-xl bg-ngo-green-50 p-6 border border-ngo-green-pale/50">
+              <h4 className="text-lg font-bold text-ngo-green mb-3 flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Our Mission
+              </h4>
+              <p className="text-muted-foreground leading-relaxed">
+                To promote accessible and equitable healthcare through education, screenings, medical support and advocacy for vulnerable populations, with a special emphasis on women's reproductive health.
+              </p>
+            </div>
+            <div className="rounded-xl bg-gradient-to-br from-ngo-green to-ngo-teal p-6 text-white">
+              <h4 className="text-lg font-bold mb-3 flex items-center gap-2">
+                <Globe className="h-5 w-5" />
+                Our Vision
+              </h4>
+              <p className="text-white/90 leading-relaxed">
+                A healthier, informed society where every individual especially the vulnerable has the opportunity to live a life free from preventable diseases and health related inequalities.
+              </p>
             </div>
           </div>
         </motion.div>
