@@ -204,6 +204,7 @@ function Navbar() {
     { label: 'Home', href: '#', key: 'home' },
     { label: 'About Us', href: '#about', key: 'about', submenu: aboutSubmenu },
     { label: 'Programs', href: '#causes', key: 'programs', submenu: programsSubmenu },
+    { label: 'Projects', href: '#causes', key: 'projects' },
     { label: 'Our Impact', href: '#impact', key: 'impact' },
     { label: 'Resources', href: '#team', key: 'resources' },
     { label: 'Gallery', href: '#events', key: 'gallery' },
