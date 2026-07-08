@@ -430,47 +430,6 @@ function HeroSection() {
               </Button>
             </div>
           </motion.div>
-
-          {/* Right: Stats Cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-            className="grid grid-cols-2 gap-4"
-          >
-            <StatCard
-              icon={<Target className="h-6 w-6" />}
-              value={causeCount}
-              suffix=""
-              label="Active Projects"
-              ref={causeRef}
-              delay={0}
-            />
-            <StatCard
-              icon={<Globe className="h-6 w-6" />}
-              value={countryCount}
-              suffix="+"
-              label="Countries Served"
-              ref={countryRef}
-              delay={0.1}
-            />
-            <StatCard
-              icon={<Users className="h-6 w-6" />}
-              value={donorCount}
-              suffix="+"
-              label="Global Donors"
-              ref={donorRef}
-              delay={0.2}
-            />
-            <StatCard
-              icon={<Award className="h-6 w-6" />}
-              value={14}
-              suffix=""
-              label="Years of Service"
-              delay={0.3}
-              staticValue
-            />
-          </motion.div>
         </div>
       </div>
 
