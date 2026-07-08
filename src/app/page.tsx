@@ -590,22 +590,7 @@ function AboutSection() {
           <p className="text-muted-foreground leading-relaxed">
             Driven by compassion, integrity, and a commitment to sustainable impact, Melinawo Foundation continues to empower communities through preventive healthcare, advocacy, and life-changing medical interventions, creating healthier futures for individuals and families across Ghana.
           </p>
-          <div className="flex items-center gap-4 pt-2">
-            <div className="flex -space-x-2">
-              {['SC', 'JO', 'MG', 'DK'].map((initials, i) => (
-                <Avatar key={i} className="h-9 w-9 border-2 border-white">
-                  <AvatarFallback className="bg-ngo-green text-white text-xs font-semibold">
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">200+ team members</span> and{' '}
-              <span className="font-semibold text-foreground">3,000+ volunteers</span> worldwide
-            </p>
-          </div>
-        </motion.div>
+          </motion.div>
 
         {/* Mission & Vision */}
         <motion.div
