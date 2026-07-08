@@ -405,12 +405,11 @@ function HeroSection() {
               Making a Difference Since 2012
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
-              Transforming Lives,{' '}
-              <span className="text-ngo-green">Building Futures</span>
+              Empowering Lives,{' '}
+              <span className="text-ngo-green">Restoring Health</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-8 max-w-lg">
-              MELINAWO FOUNDATION is dedicated to creating sustainable change through community
-              development, education, healthcare, and humanitarian support across 23 countries worldwide.
+              Melinawo Foundation is dedicated to improving lives through health education, free screenings, surgical care and support for women living with endometriosis across Ghana.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
