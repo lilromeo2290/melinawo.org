@@ -380,7 +380,7 @@ function HeroSection() {
   const { count: countryCount, ref: countryRef } = useAnimatedCounter(23);
   const { count: donorCount, ref: donorRef } = useAnimatedCounter(18500);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const heroImages = ['/hero-bg.png', '/hero-bg-2.png'];
+  const heroImages = ['/hero-bg.png', '/hero-bg-2.png', '/hero-bg-3.png'];
 
   useEffect(() => {
     const timer = setInterval(() => {
