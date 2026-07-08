@@ -175,7 +175,7 @@ function Navbar() {
   const links = [
     { label: 'Home', href: '#' },
     { label: 'About Us', href: '#about' },
-    { label: 'Programs / Projects', href: '#causes' },
+    { label: 'Programs', href: '#causes' },
     { label: 'Our Impact', href: '#impact' },
     { label: 'Get Involved', href: '#donate' },
     { label: 'Resources', href: '#team' },
