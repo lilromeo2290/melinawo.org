@@ -389,11 +389,9 @@ function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-ngo-green-50 via-white to-ngo-green-50/30" />
-      <div className="absolute top-20 right-10 w-72 h-72 bg-ngo-green-pale/30 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-ngo-warm/10 rounded-full blur-3xl" />
-      <div className="absolute top-1/3 left-1/4 w-48 h-48 bg-ngo-green-pale/15 rounded-full blur-2xl" />
+      {/* Background image with overlay */}
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/hero-bg.png')" }} />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -403,17 +401,17 @@ function HeroSection() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6 text-white">
               Empowering Lives,{' '}
-              <span className="text-ngo-green">Restoring Health</span>
+              <span className="text-ngo-amber">Restoring Health</span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-8 max-w-lg">
+            <p className="text-lg sm:text-xl text-white/90 leading-relaxed mb-8 max-w-lg">
               Melinawo Foundation is dedicated to improving lives through health education, free screenings, surgical care and support for women living with endometriosis across Ghana.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
                 size="lg"
-                className="bg-ngo-green hover:bg-ngo-green-light text-white px-8 h-12 text-base font-semibold"
+                className="bg-ngo-amber hover:bg-ngo-warm text-white px-8 h-12 text-base font-semibold"
                 onClick={scrollToDonate}
               >
                 <Heart className="h-5 w-5 mr-2" />
@@ -422,7 +420,7 @@ function HeroSection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="px-8 h-12 text-base font-semibold"
+                className="px-8 h-12 text-base font-semibold bg-white/20 hover:bg-white/30 text-white border-white/40"
                 onClick={scrollToCauses}
               >
                 Explore Causes
@@ -439,7 +437,6 @@ function HeroSection() {
           <path
             d="M0 40C240 70 480 10 720 40C960 70 1200 10 1440 40V80H0V40Z"
             fill="white"
-            fillOpacity="0.6"
           />
           <path d="M0 60C360 80 720 40 1080 60C1260 70 1380 55 1440 60V80H0V60Z" fill="white" />
         </svg>
