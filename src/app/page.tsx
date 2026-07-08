@@ -192,7 +192,7 @@ function Navbar() {
 
   const aboutSubmenu = [
     { label: 'Mission & Vision', href: '#mission-vision' },
-    { label: 'Core Values', href: '#about' },
+    { label: 'Core Values', href: '#core-values' },
     { label: 'Team & Leadership', href: '#team' },
     { label: 'Board Members', href: '#team' },
   ];
@@ -637,6 +637,50 @@ function AboutSection() {
             </div>
           </div>
         </motion.div>
+      </div>
+
+      {/* Core Values */}
+      <div id="core-values" className="mt-12">
+        <h3 className="text-2xl font-bold text-foreground text-center mb-8">Our Core Values</h3>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[
+            {
+              icon: <Heart className="h-6 w-6" />,
+              title: 'Compassion',
+              desc: 'Serving with empathy and respect',
+            },
+            {
+              icon: <Award className="h-6 w-6" />,
+              title: 'Integrity',
+              desc: 'Upholding transparency and accountability in all we do',
+            },
+            {
+              icon: <Users className="h-6 w-6" />,
+              title: 'Collaboration',
+              desc: 'Working together with partners and communities for greater impact',
+            },
+            {
+              icon: <BookOpen className="h-6 w-6" />,
+              title: 'Empowerment',
+              desc: 'Educating individuals to make informed health decisions',
+            },
+          ].map((v, i) => (
+            <motion.div
+              key={v.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              className="text-center p-5 rounded-xl bg-white border border-border shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="w-12 h-12 rounded-full bg-ngo-green-50 text-ngo-green flex items-center justify-center mx-auto mb-3">
+                {v.icon}
+              </div>
+              <h4 className="font-bold text-foreground mb-1">{v.title}</h4>
+              <p className="text-sm text-muted-foreground">{v.desc}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* Mission Pillars */}
