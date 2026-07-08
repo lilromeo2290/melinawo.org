@@ -198,13 +198,12 @@ function Navbar() {
 
   const programsSubmenu = [
     { label: 'Health Awareness, Screening & Empowerment', href: '/programs/health-awareness' },
-    { label: "Women's Health & Endometriosis Awareness", href: '/programs/womens-health' },
   ];
 
   const links = [
     { label: 'Home', href: '#', key: 'home' },
     { label: 'About Us', href: '#about', key: 'about', submenu: aboutSubmenu },
-    { label: 'Programs', href: '#causes', key: 'programs' },
+    { label: 'Programs', href: '#causes', key: 'programs', submenu: programsSubmenu },
     { label: 'Our Impact', href: '#impact', key: 'impact' },
     { label: 'Resources', href: '#team', key: 'resources' },
     { label: 'Gallery', href: '#events', key: 'gallery' },
