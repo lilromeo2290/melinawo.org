@@ -222,12 +222,12 @@ function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2.5 group">
-          <img src="/logo.png" alt="MELINAWO FOUNDATION" className="h-9 w-auto" />
+          <img src="/logo.png" alt="MELINAWO FOUNDATION" className="h-9 w-auto drop-shadow-md" />
           <div className="flex flex-col">
-            <span className="text-lg font-bold text-foreground group-hover:text-ngo-green transition-colors leading-tight">
+            <span className={`text-lg font-bold leading-tight transition-colors ${scrolled ? 'text-foreground group-hover:text-ngo-green' : 'text-white drop-shadow-md'}`}> 
               MELINAWO FOUNDATION
             </span>
-            <span className="text-xs text-muted-foreground italic">I am truly here for you</span>
+            <span className={`text-xs italic transition-colors ${scrolled ? 'text-muted-foreground' : 'text-white/80'}`}>I am truly here for you</span>
           </div>
         </a>
 
@@ -238,7 +238,7 @@ function Navbar() {
               <div key={l.key} className="relative" ref={l.key === 'about' ? aboutRef : programsRef}>
                 <button
                   onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
-                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors inline-flex items-center gap-1"
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-1 ${scrolled ? 'text-muted-foreground hover:text-foreground hover:bg-muted' : 'text-white/90 hover:text-white hover:bg-white/10'}`}
                 >
                   {l.label}
                   <ChevronUp className={`h-3 w-3 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
@@ -270,7 +270,7 @@ function Navbar() {
               <a
                 key={l.key}
                 href={l.href}
-                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors"
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${scrolled ? 'text-muted-foreground hover:text-foreground hover:bg-muted' : 'text-white/90 hover:text-white hover:bg-white/10'}`}
               >
                 {l.label}
               </a>
@@ -279,24 +279,24 @@ function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="sm" asChild className={scrolled ? '' : 'text-white/90 hover:text-white hover:bg-white/10'}>
             <a href="#donate">
               <Heart className="h-4 w-4 mr-1.5" />
               Donate
             </a>
           </Button>
-          <Button size="sm" className="bg-ngo-green hover:bg-ngo-green-light text-white" asChild>
+          <Button size="sm" className={scrolled ? 'bg-ngo-green hover:bg-ngo-green-light text-white' : 'bg-white/20 hover:bg-white/30 text-white border border-white/30'} asChild>
             <a href="#volunteer">Volunteer</a>
           </Button>
         </div>
 
         {/* Mobile Toggle */}
         <button
-          className="md:hidden p-2 rounded-md hover:bg-muted"
+          className={`md:hidden p-2 rounded-md transition-colors ${scrolled ? 'hover:bg-muted' : 'hover:bg-white/10'}`}
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {mobileOpen ? <X className={`h-5 w-5 ${scrolled ? '' : 'text-white'}`} /> : <Menu className={`h-5 w-5 ${scrolled ? '' : 'text-white'}`} />}
         </button>
       </nav>
 
