@@ -400,9 +400,6 @@ function HeroSection() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
           >
-            <Badge className="mb-6 px-4 py-1.5 bg-ngo-green text-white border-none text-sm font-medium">
-              Making a Difference Since 2012
-            </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
               Empowering Lives,{' '}
               <span className="text-ngo-green">Restoring Health</span>
