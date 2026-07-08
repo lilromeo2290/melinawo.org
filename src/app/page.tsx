@@ -238,7 +238,7 @@ function Navbar() {
               <div key={l.key} className="relative" ref={l.key === 'about' ? aboutRef : programsRef}>
                 <button
                   onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-1 ${scrolled ? 'text-muted-foreground hover:text-foreground hover:bg-muted' : 'text-white/90 hover:text-white hover:bg-white/10'}`}
+                  className={`px-3 py-2 text-sm font-medium uppercase tracking-wide rounded-md transition-colors inline-flex items-center gap-1 ${scrolled ? 'text-muted-foreground hover:text-foreground hover:bg-muted' : 'text-white/90 hover:text-white hover:bg-white/10'}`}
                 >
                   {l.label}
                   <ChevronUp className={`h-3 w-3 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
@@ -256,7 +256,7 @@ function Navbar() {
                         <a
                           key={sub.label}
                           href={sub.href}
-                          className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                          className="block px-4 py-2.5 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
                           onClick={() => { setAboutOpen(false); setProgramsOpen(false); }}
                         >
                           {sub.label}
@@ -270,7 +270,7 @@ function Navbar() {
               <a
                 key={l.key}
                 href={l.href}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${scrolled ? 'text-muted-foreground hover:text-foreground hover:bg-muted' : 'text-white/90 hover:text-white hover:bg-white/10'}`}
+                className={`px-3 py-2 text-sm font-medium uppercase tracking-wide rounded-md transition-colors ${scrolled ? 'text-muted-foreground hover:text-foreground hover:bg-muted' : 'text-white/90 hover:text-white hover:bg-white/10'}`}
               >
                 {l.label}
               </a>
@@ -315,7 +315,7 @@ function Navbar() {
                   <div key={l.key}>
                     <button
                       onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
-                      className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                     >
                       {l.label}
                       <ChevronUp className={`h-4 w-4 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
@@ -333,7 +333,7 @@ function Navbar() {
                               key={sub.label}
                               href={sub.href}
                               onClick={() => { setMobileOpen(false); setAboutOpen(false); setProgramsOpen(false); }}
-                              className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+                              className="block px-3 py-2 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                             >
                               {sub.label}
                             </a>
@@ -347,7 +347,7 @@ function Navbar() {
                     key={l.key}
                     href={l.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+                    className="block px-3 py-2.5 text-sm font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                   >
                     {l.label}
                   </a>
