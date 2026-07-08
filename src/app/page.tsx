@@ -196,15 +196,18 @@ function Navbar() {
     { label: 'Team & Leadership', href: '#team' },
   ];
 
-  const programsSubmenu = [
+  const programsSubmenu: { label: string; href: string }[] = [
+  ];
+
+  const projectsSubmenu = [
     { label: 'Health Awareness, Screening & Empowerment', href: '/programs/health-awareness' },
   ];
 
   const links = [
     { label: 'Home', href: '#', key: 'home' },
     { label: 'About Us', href: '#about', key: 'about', submenu: aboutSubmenu },
-    { label: 'Programs', href: '#causes', key: 'programs', submenu: programsSubmenu },
-    { label: 'Projects', href: '#causes', key: 'projects' },
+    { label: 'Programs', href: '#causes', key: 'programs' },
+    { label: 'Projects', href: '#causes', key: 'projects', submenu: projectsSubmenu },
     { label: 'Our Impact', href: '#impact', key: 'impact' },
     { label: 'Resources', href: '#team', key: 'resources' },
     { label: 'Gallery', href: '#events', key: 'gallery' },
