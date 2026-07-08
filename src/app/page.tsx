@@ -751,9 +751,11 @@ function CausesSection({ causes }: { causes: Cause[] }) {
                 <h3 className="font-bold text-lg text-foreground mb-2 group-hover:text-ngo-green transition-colors">
                   {cause.title}
                 </h3>
+                {cause.description && (
                 <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
                   {cause.description}
                 </p>
+                )}
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="font-semibold text-ngo-green">
