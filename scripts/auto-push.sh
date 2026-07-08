@@ -12,8 +12,9 @@ if [ -z "$CHANGES" ]; then
   exit 0
 fi
 
-# Stage all changes
+# Stage all changes (force-add DB file)
 git add -A
+git add -f db/custom.db
 
 # Commit with timestamp
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
