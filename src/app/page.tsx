@@ -223,9 +223,12 @@ function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2.5 group">
           <img src="/logo.png" alt="MELINAWO FOUNDATION" className="h-9 w-auto" />
-          <span className="text-lg font-bold text-foreground group-hover:text-ngo-green transition-colors">
-            MELINAWO FOUNDATION
-          </span>
+          <div className="flex flex-col">
+            <span className="text-lg font-bold text-foreground group-hover:text-ngo-green transition-colors leading-tight">
+              MELINAWO FOUNDATION
+            </span>
+            <span className="text-xs text-muted-foreground italic">I am truly here for you</span>
+          </div>
         </a>
 
         {/* Desktop Nav */}
@@ -1592,8 +1595,7 @@ function Footer() {
               <span className="text-lg font-bold">MELINAWO FOUNDATION</span>
             </div>
             <p className="text-sm text-white/60 leading-relaxed mb-4">
-              Creating sustainable change through community development, education, healthcare, and
-              humanitarian support since 2012.
+              I am truly here for you.
             </p>
             <div className="flex items-center gap-2 text-sm text-white/60">
               <MapPin className="h-4 w-4" />
