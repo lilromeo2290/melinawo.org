@@ -167,8 +167,10 @@ function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [programsOpen, setProgramsOpen] = useState(false);
+  const [projectsOpen, setProjectsOpen] = useState(false);
   const aboutRef = useRef<HTMLDivElement>(null);
   const programsRef = useRef<HTMLDivElement>(null);
+  const projectsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -185,6 +187,9 @@ function Navbar() {
       if (programsRef.current && !programsRef.current.contains(e.target as Node)) {
         setProgramsOpen(false);
       }
+      if (projectsRef.current && !projectsRef.current.contains(e.target as Node)) {
+        setProjectsOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -197,6 +202,7 @@ function Navbar() {
   ];
 
   const programsSubmenu: { label: string; href: string }[] = [
+    { label: 'Health Awareness, Screening & Empowerment', href: '/programs/health-awareness' },
   ];
 
   const projectsSubmenu = [
@@ -206,7 +212,7 @@ function Navbar() {
   const links = [
     { label: 'Home', href: '#', key: 'home' },
     { label: 'About Us', href: '#about', key: 'about', submenu: aboutSubmenu },
-    { label: 'Programs', href: '#causes', key: 'programs' },
+    { label: 'Programs', href: '#causes', key: 'programs', submenu: programsSubmenu },
     { label: 'Projects', href: '#causes', key: 'projects', submenu: projectsSubmenu },
     { label: 'Our Impact', href: '#impact', key: 'impact' },
     { label: 'Resources', href: '#team', key: 'resources' },
@@ -238,16 +244,20 @@ function Navbar() {
         <div className="hidden md:flex items-center gap-1">
           {links.map((l) =>
             l.submenu ? (
-              <div key={l.key} className="relative" ref={l.key === 'about' ? aboutRef : programsRef}>
+              <div key={l.key} className="relative" ref={l.key === 'about' ? aboutRef : l.key === 'programs' ? programsRef : projectsRef}>
                 <button
-                  onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
+                  onClick={() => {
+                    if (l.key === 'about') setAboutOpen(!aboutOpen);
+                    else if (l.key === 'programs') setProgramsOpen(!programsOpen);
+                    else setProjectsOpen(!projectsOpen);
+                  }}
                   className={`px-3 py-2 text-sm font-medium uppercase tracking-wide rounded-md transition-colors inline-flex items-center gap-1 ${scrolled ? 'text-muted-foreground hover:text-foreground hover:bg-muted' : 'text-white/90 hover:text-white hover:bg-white/10'}`}
                 >
                   {l.label}
-                  <ChevronUp className={`h-3 w-3 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
+                  <ChevronUp className={`h-3 w-3 transition-transform ${(l.key === 'about' ? aboutOpen : l.key === 'programs' ? programsOpen : projectsOpen) ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
-                  {(l.key === 'about' ? aboutOpen : programsOpen) && (
+                  {(l.key === 'about' ? aboutOpen : l.key === 'programs' ? programsOpen : projectsOpen) && (
                     <motion.div
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -260,7 +270,7 @@ function Navbar() {
                           key={sub.label}
                           href={sub.href}
                           className="block px-4 py-2.5 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                          onClick={() => { setAboutOpen(false); setProgramsOpen(false); }}
+                          onClick={() => { setAboutOpen(false); setProgramsOpen(false); setProjectsOpen(false); }}
                         >
                           {sub.label}
                         </a>
@@ -317,14 +327,18 @@ function Navbar() {
                 l.submenu ? (
                   <div key={l.key}>
                     <button
-                      onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
+                      onClick={() => {
+                        if (l.key === 'about') setAboutOpen(!aboutOpen);
+                        else if (l.key === 'programs') setProgramsOpen(!programsOpen);
+                        else setProjectsOpen(!projectsOpen);
+                      }}
                       className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                     >
                       {l.label}
-                      <ChevronUp className={`h-4 w-4 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
+                      <ChevronUp className={`h-4 w-4 transition-transform ${(l.key === 'about' ? aboutOpen : l.key === 'programs' ? programsOpen : projectsOpen) ? 'rotate-180' : ''}`} />
                     </button>
                     <AnimatePresence>
-                      {(l.key === 'about' ? aboutOpen : programsOpen) && (
+                      {(l.key === 'about' ? aboutOpen : l.key === 'programs' ? programsOpen : projectsOpen) && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
@@ -335,7 +349,7 @@ function Navbar() {
                             <a
                               key={sub.label}
                               href={sub.href}
-                              onClick={() => { setMobileOpen(false); setAboutOpen(false); setProgramsOpen(false); }}
+                              onClick={() => { setMobileOpen(false); setAboutOpen(false); setProgramsOpen(false); setProjectsOpen(false); }}
                               className="block px-3 py-2 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
                             >
                               {sub.label}
