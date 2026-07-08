@@ -206,7 +206,7 @@ function Navbar() {
   ];
 
   const projectsSubmenu = [
-    { label: 'Health Awareness, Screening & Empowerment', href: '/programs/health-awareness' },
+    { label: 'Health Awareness', href: '/programs/health-awareness' },
   ];
 
   const links = [
