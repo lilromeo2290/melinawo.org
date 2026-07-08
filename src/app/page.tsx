@@ -379,6 +379,15 @@ function HeroSection() {
   const { count: causeCount, ref: causeRef } = useAnimatedCounter(6);
   const { count: countryCount, ref: countryRef } = useAnimatedCounter(23);
   const { count: donorCount, ref: donorRef } = useAnimatedCounter(18500);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const heroImages = ['/hero-bg.png', '/hero-bg-2.png'];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [heroImages.length]);
 
   const scrollToDonate = () => {
     document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' });
@@ -389,8 +398,19 @@ function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image with overlay */}
-      <div className="absolute inset-0" style={{ backgroundImage: "url('/hero-bg.png')", backgroundSize: '100% 100%', backgroundPosition: 'center center' }} />
+      {/* Background image slider */}
+      {heroImages.map((img, i) => (
+        <div
+          key={img}
+          className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+          style={{
+            backgroundImage: `url('${img}')`,
+            backgroundSize: '100% 100%',
+            backgroundPosition: 'center center',
+            opacity: currentSlide === i ? 1 : 0,
+          }}
+        />
+      ))}
       <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
@@ -429,6 +449,17 @@ function HeroSection() {
             </div>
           </motion.div>
         </div>
+      </div>
+
+      {/* Slider dots */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        {heroImages.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === i ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/70'}`}
+          />
+        ))}
       </div>
 
       {/* Bottom wave decoration */}
