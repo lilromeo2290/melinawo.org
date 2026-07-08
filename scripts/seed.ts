@@ -120,19 +120,19 @@ async function seed() {
   // Seed Team Members
   const team = [
     {
-      id: 'sarah-chen',
-      name: 'Dr. Sarah Chen',
-      role: 'Executive Director',
-      bio: 'With over 20 years of experience in international development, Dr. Chen leads MELINAWO FOUNDATION with a vision of sustainable, community-driven change. She holds a Ph.D. in Public Policy from Stanford University.',
-      image: '/team/sarah.jpg',
+      id: 'raphael-tumawu',
+      name: 'Raphael Tudiza Tumawu',
+      role: 'CEO and Founder',
+      bio: 'With a deep passion for community-driven change, Raphael founded MELINAWO FOUNDATION to create sustainable impact in health, education, and empowerment. His leadership and vision continue to drive the foundation’s mission forward.',
+      image: '/team/raphael.jpg',
       order: 0,
     },
     {
-      id: 'james-okonkwo',
-      name: 'James Okonkwo',
-      role: 'Director of Programs',
-      bio: 'James oversees all our global programs across 15 countries. His background in public health and community organizing has been instrumental in designing our most impactful initiatives.',
-      image: '/team/james.jpg',
+      id: 'cynthia-tumawu',
+      name: 'Cynthia Woelinam Tumawu',
+      role: 'Co Founder & Executive Director',
+      bio: 'Cynthia co-founded MELINAWO FOUNDATION and leads its day-to-day operations with dedication and strategic insight. Her commitment to women’s health and community empowerment shapes the foundation’s most impactful programs.',
+      image: '/team/cynthia.jpg',
       order: 1,
     },
     {

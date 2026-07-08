@@ -1,0 +1,1775 @@
+     1→'use client';
+     2→
+     3→import { useState, useEffect, useRef, useCallback, type FormEvent } from 'react';
+     4→import { motion, useInView, AnimatePresence } from 'framer-motion';
+     5→import { Button } from '@/components/ui/button';
+     6→import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+     7→import { Input } from '@/components/ui/input';
+     8→import { Textarea } from '@/components/ui/textarea';
+     9→import { Badge } from '@/components/ui/badge';
+    10→import { Progress } from '@/components/ui/progress';
+    11→import { Separator } from '@/components/ui/separator';
+    12→import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+    13→import {
+    14→  Heart,
+    15→  Droplets,
+    16→  BookOpen,
+    17→  TreePine,
+    18→  Users,
+    19→  Globe,
+    20→  HandHeart,
+    21→  Calendar,
+    22→  MapPin,
+    23→  ArrowRight,
+    24→  Menu,
+    25→  X,
+    26→  Send,
+    27→  DollarSign,
+    28→  Target,
+    29→  Award,
+    30→  ChevronUp,
+    31→  Star,
+    32→} from 'lucide-react';
+    33→
+    34→/* ─────────────────────────────── Types ─────────────────────────────── */
+    35→
+    36→interface Cause {
+    37→  id: string;
+    38→  title: string;
+    39→  description: string;
+    40→  image: string;
+    41→  raised: number;
+    42→  goal: number;
+    43→  category: string;
+    44→  featured: boolean;
+    45→}
+    46→
+    47→interface Event {
+    48→  id: string;
+    49→  title: string;
+    50→  description: string;
+    51→  date: string;
+    52→  location: string;
+    53→  image: string;
+    54→}
+    55→
+    56→interface TeamMember {
+    57→  id: string;
+    58→  name: string;
+    59→  role: string;
+    60→  bio: string;
+    61→  image: string;
+    62→  order: number;
+    63→}
+    64→
+    65→interface Testimonial {
+    66→  id: string;
+    67→  name: string;
+    68→  role: string;
+    69→  content: string;
+    70→  image: string;
+    71→}
+    72→
+    73→interface Stats {
+    74→  fundsRaised: number;
+    75→  donors: number;
+    76→  projects: number;
+    77→  volunteers: number;
+    78→  countries: number;
+    79→}
+    80→
+    81→/* ─────────────────────────── Hooks ─────────────────────────── */
+    82→
+    83→function useAnimatedCounter(end: number, duration = 2000, startOnView = true) {
+    84→  const [count, setCount] = useState(0);
+    85→  const ref = useRef<HTMLSpanElement>(null);
+    86→  const inView = useInView(ref, { once: true, margin: '-50px' });
+    87→  const started = useRef(false);
+    88→
+    89→  useEffect(() => {
+    90→    if ((!startOnView || inView) && !started.current) {
+    91→      started.current = true;
+    92→      const startTime = performance.now();
+    93→      const step = (now: number) => {
+    94→        const elapsed = now - startTime;
+    95→        const progress = Math.min(elapsed / duration, 1);
+    96→        const eased = 1 - Math.pow(1 - progress, 3);
+    97→        setCount(Math.round(eased * end));
+    98→        if (progress < 1) requestAnimationFrame(step);
+    99→      };
+   100→      requestAnimationFrame(step);
+   101→    }
+   102→  }, [inView, end, duration, startOnView]);
+   103→
+   104→  return { count, ref };
+   105→}
+   106→
+   107→/* ─────────────────────── Utility Components ─────────────────────── */
+   108→
+   109→function SectionHeading({ tag, title, subtitle }: { tag: string; title: string; subtitle: string }) {
+   110→  return (
+   111→    <motion.div
+   112→      initial={{ opacity: 0, y: 30 }}
+   113→      whileInView={{ opacity: 1, y: 0 }}
+   114→      viewport={{ once: true, margin: '-80px' }}
+   115→      transition={{ duration: 0.6 }}
+   116→      className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
+   117→    >
+   118→      <Badge variant="secondary" className="mb-4 px-4 py-1.5 text-sm font-medium bg-ngo-green-50 text-ngo-green border-ngo-green-pale/50">
+   119→        {tag}
+   120→      </Badge>
+   121→      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-4">
+   122→        {title}
+   123→      </h2>
+   124→      <p className="text-muted-foreground text-lg leading-relaxed">{subtitle}</p>
+   125→    </motion.div>
+   126→  );
+   127→}
+   128→
+   129→function SectionContainer({ id, children, className = '' }: { id: string; children: React.ReactNode; className?: string }) {
+   130→  return (
+   131→    <section id={id} className={`py-16 md:py-24 px-4 sm:px-6 lg:px-8 ${className}`}>
+   132→      <div className="max-w-7xl mx-auto">{children}</div>
+   133→    </section>
+   134→  );
+   135→}
+   136→
+   137→/* ────────────────────────── Nav Icons ────────────────────────── */
+   138→
+   139→const categoryIcons: Record<string, React.ReactNode> = {
+   140→  Environment: <Droplets className="h-5 w-5" />,
+   141→  Education: <BookOpen className="h-5 w-5" />,
+   142→  Community: <Users className="h-5 w-5" />,
+   143→  Humanitarian: <HandHeart className="h-5 w-5" />,
+   144→  Health: <Heart className="h-5 w-5" />,
+   145→};
+   146→
+   147→const categoryColors: Record<string, string> = {
+   148→  Environment: 'bg-blue-100 text-blue-700',
+   149→  Education: 'bg-amber-100 text-amber-700',
+   150→  Community: 'bg-rose-100 text-rose-700',
+   151→  Humanitarian: 'bg-orange-100 text-orange-700',
+   152→  Health: 'bg-teal-100 text-teal-700',
+   153→};
+   154→
+   155→const categoryGradients: Record<string, string> = {
+   156→  Environment: 'from-blue-600 to-blue-800',
+   157→  Education: 'from-amber-500 to-orange-500',
+   158→  Community: 'from-rose-500 to-pink-600',
+   159→  Humanitarian: 'from-orange-500 to-red-500',
+   160→  Health: 'from-teal-500 to-cyan-600',
+   161→};
+   162→
+   163→/* ─────────────────────────── NAVBAR ─────────────────────────── */
+   164→
+   165→function Navbar() {
+   166→  const [scrolled, setScrolled] = useState(false);
+   167→  const [mobileOpen, setMobileOpen] = useState(false);
+   168→  const [aboutOpen, setAboutOpen] = useState(false);
+   169→  const [programsOpen, setProgramsOpen] = useState(false);
+   170→  const aboutRef = useRef<HTMLDivElement>(null);
+   171→  const programsRef = useRef<HTMLDivElement>(null);
+   172→
+   173→  useEffect(() => {
+   174→    const onScroll = () => setScrolled(window.scrollY > 20);
+   175→    window.addEventListener('scroll', onScroll, { passive: true });
+   176→    return () => window.removeEventListener('scroll', onScroll);
+   177→  }, []);
+   178→
+   179→  // Close dropdowns when clicking outside
+   180→  useEffect(() => {
+   181→    const handleClick = (e: MouseEvent) => {
+   182→      if (aboutRef.current && !aboutRef.current.contains(e.target as Node)) {
+   183→        setAboutOpen(false);
+   184→      }
+   185→      if (programsRef.current && !programsRef.current.contains(e.target as Node)) {
+   186→        setProgramsOpen(false);
+   187→      }
+   188→    };
+   189→    document.addEventListener('mousedown', handleClick);
+   190→    return () => document.removeEventListener('mousedown', handleClick);
+   191→  }, []);
+   192→
+   193→  const aboutSubmenu = [
+   194→    { label: 'Mission & Vision', href: '#mission-vision' },
+   195→    { label: 'Core Values', href: '#core-values' },
+   196→    { label: 'Team & Leadership', href: '#team' },
+   197→    { label: 'Board Members', href: '#team' },
+   198→  ];
+   199→
+   200→  const programsSubmenu = [
+   201→    { label: 'Health Awareness, Screening & Empowerment', href: '#causes' },
+   202→    { label: "Women's Health & Endometriosis Awareness", href: '#causes' },
+   203→  ];
+   204→
+   205→  const links = [
+   206→    { label: 'Home', href: '#', key: 'home' },
+   207→    { label: 'About Us', href: '#about', key: 'about', submenu: aboutSubmenu },
+   208→    { label: 'Programs', href: '#causes', key: 'programs', submenu: programsSubmenu, dropdownRef: 'programs' },
+   209→    { label: 'Our Impact', href: '#impact', key: 'impact' },
+   210→    { label: 'Resources', href: '#team', key: 'resources' },
+   211→    { label: 'Gallery', href: '#events', key: 'gallery' },
+   212→    { label: 'Contact Us', href: '#contact', key: 'contact' },
+   213→  ];
+   214→
+   215→  return (
+   216→    <motion.header
+   217→      initial={{ y: -100 }}
+   218→      animate={{ y: 0 }}
+   219→      transition={{ duration: 0.5 }}
+   220→      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+   221→        scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-border' : 'bg-transparent'
+   222→      }`}
+   223→    >
+   224→      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+   225→        <a href="#" className="flex items-center gap-2.5 group">
+   226→          <img src="/logo.png" alt="MELINAWO FOUNDATION" className="h-9 w-auto" />
+   227→          <span className="text-lg font-bold text-foreground group-hover:text-ngo-green transition-colors">
+   228→            MELINAWO FOUNDATION
+   229→          </span>
+   230→        </a>
+   231→
+   232→        {/* Desktop Nav */}
+   233→        <div className="hidden md:flex items-center gap-1">
+   234→          {links.map((l) =>
+   235→            l.submenu ? (
+   236→              <div key={l.key} className="relative" ref={l.key === 'about' ? aboutRef : programsRef}>
+   237→                <button
+   238→                  onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
+   239→                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors inline-flex items-center gap-1"
+   240→                >
+   241→                  {l.label}
+   242→                  <ChevronUp className={`h-3 w-3 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
+   243→                </button>
+   244→                <AnimatePresence>
+   245→                  {(l.key === 'about' ? aboutOpen : programsOpen) && (
+   246→                    <motion.div
+   247→                      initial={{ opacity: 0, y: -5 }}
+   248→                      animate={{ opacity: 1, y: 0 }}
+   249→                      exit={{ opacity: 0, y: -5 }}
+   250→                      transition={{ duration: 0.15 }}
+   251→                      className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-border py-1.5 z-50"
+   252→                    >
+   253→                      {l.submenu.map((sub) => (
+   254→                        <a
+   255→                          key={sub.label}
+   256→                          href={sub.href}
+   257→                          className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+   258→                          onClick={() => { setAboutOpen(false); setProgramsOpen(false); }}
+   259→                        >
+   260→                          {sub.label}
+   261→                        </a>
+   262→                      ))}
+   263→                    </motion.div>
+   264→                  )}
+   265→                </AnimatePresence>
+   266→              </div>
+   267→            ) : (
+   268→              <a
+   269→                key={l.key}
+   270→                href={l.href}
+   271→                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors"
+   272→              >
+   273→                {l.label}
+   274→              </a>
+   275→            )
+   276→          )}
+   277→        </div>
+   278→
+   279→        <div className="hidden md:flex items-center gap-3">
+   280→          <Button variant="ghost" size="sm" asChild>
+   281→            <a href="#donate">
+   282→              <Heart className="h-4 w-4 mr-1.5" />
+   283→              Donate
+   284→            </a>
+   285→          </Button>
+   286→          <Button size="sm" className="bg-ngo-green hover:bg-ngo-green-light text-white" asChild>
+   287→            <a href="#volunteer">Volunteer</a>
+   288→          </Button>
+   289→        </div>
+   290→
+   291→        {/* Mobile Toggle */}
+   292→        <button
+   293→          className="md:hidden p-2 rounded-md hover:bg-muted"
+   294→          onClick={() => setMobileOpen(!mobileOpen)}
+   295→          aria-label="Toggle menu"
+   296→        >
+   297→          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+   298→        </button>
+   299→      </nav>
+   300→
+   301→      {/* Mobile Menu */}
+   302→      <AnimatePresence>
+   303→        {mobileOpen && (
+   304→          <motion.div
+   305→            initial={{ opacity: 0, height: 0 }}
+   306→            animate={{ opacity: 1, height: 'auto' }}
+   307→            exit={{ opacity: 0, height: 0 }}
+   308→            className="md:hidden bg-white border-b border-border overflow-hidden"
+   309→          >
+   310→            <div className="px-4 py-4 space-y-1">
+   311→              {links.map((l) =>
+   312→                l.submenu ? (
+   313→                  <div key={l.key}>
+   314→                    <button
+   315→                      onClick={() => l.key === 'about' ? setAboutOpen(!aboutOpen) : setProgramsOpen(!programsOpen)}
+   316→                      className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+   317→                    >
+   318→                      {l.label}
+   319→                      <ChevronUp className={`h-4 w-4 transition-transform ${(l.key === 'about' ? aboutOpen : programsOpen) ? 'rotate-180' : ''}`} />
+   320→                    </button>
+   321→                    <AnimatePresence>
+   322→                      {(l.key === 'about' ? aboutOpen : programsOpen) && (
+   323→                        <motion.div
+   324→                          initial={{ opacity: 0, height: 0 }}
+   325→                          animate={{ opacity: 1, height: 'auto' }}
+   326→                          exit={{ opacity: 0, height: 0 }}
+   327→                          className="pl-4 overflow-hidden"
+   328→                        >
+   329→                          {l.submenu.map((sub) => (
+   330→                            <a
+   331→                              key={sub.label}
+   332→                              href={sub.href}
+   333→                              onClick={() => { setMobileOpen(false); setAboutOpen(false); setProgramsOpen(false); }}
+   334→                              className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+   335→                            >
+   336→                              {sub.label}
+   337→                            </a>
+   338→                          ))}
+   339→                        </motion.div>
+   340→                      )}
+   341→                    </AnimatePresence>
+   342→                  </div>
+   343→                ) : (
+   344→                  <a
+   345→                    key={l.key}
+   346→                    href={l.href}
+   347→                    onClick={() => setMobileOpen(false)}
+   348→                    className="block px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+   349→                  >
+   350→                    {l.label}
+   351→                  </a>
+   352→                )
+   353→              )}
+   354→              <Separator className="my-2" />
+   355→              <div className="flex gap-2 pt-1">
+   356→                <Button variant="outline" size="sm" className="flex-1" asChild>
+   357→                  <a href="#donate" onClick={() => setMobileOpen(false)}>
+   358→                    <Heart className="h-4 w-4 mr-1.5" />
+   359→                    Donate
+   360→                  </a>
+   361→                </Button>
+   362→                <Button size="sm" className="flex-1 bg-ngo-green hover:bg-ngo-green-light text-white" asChild>
+   363→                  <a href="#volunteer" onClick={() => setMobileOpen(false)}>Volunteer</a>
+   364→                </Button>
+   365→              </div>
+   366→            </div>
+   367→          </motion.div>
+   368→        )}
+   369→      </AnimatePresence>
+   370→    </motion.header>
+   371→  );
+   372→}
+   373→
+   374→/* ─────────────────────────── HERO ─────────────────────────── */
+   375→
+   376→function HeroSection() {
+   377→  const { count: causeCount, ref: causeRef } = useAnimatedCounter(6);
+   378→  const { count: countryCount, ref: countryRef } = useAnimatedCounter(23);
+   379→  const { count: donorCount, ref: donorRef } = useAnimatedCounter(18500);
+   380→
+   381→  const scrollToDonate = () => {
+   382→    document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' });
+   383→  };
+   384→  const scrollToCauses = () => {
+   385→    document.getElementById('causes')?.scrollIntoView({ behavior: 'smooth' });
+   386→  };
+   387→
+   388→  return (
+   389→    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+   390→      {/* Background gradient */}
+   391→      <div className="absolute inset-0 bg-gradient-to-br from-ngo-green-50 via-white to-ngo-green-50/30" />
+   392→      <div className="absolute top-20 right-10 w-72 h-72 bg-ngo-green-pale/30 rounded-full blur-3xl" />
+   393→      <div className="absolute bottom-20 left-10 w-96 h-96 bg-ngo-warm/10 rounded-full blur-3xl" />
+   394→      <div className="absolute top-1/3 left-1/4 w-48 h-48 bg-ngo-green-pale/15 rounded-full blur-2xl" />
+   395→
+   396→      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+   397→        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+   398→          {/* Left: Text */}
+   399→          <motion.div
+   400→            initial={{ opacity: 0, x: -40 }}
+   401→            animate={{ opacity: 1, x: 0 }}
+   402→            transition={{ duration: 0.8, ease: 'easeOut' }}
+   403→          >
+   404→            <Badge className="mb-6 px-4 py-1.5 bg-ngo-green text-white border-none text-sm font-medium">
+   405→              Making a Difference Since 2012
+   406→            </Badge>
+   407→            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
+   408→              Transforming Lives,{' '}
+   409→              <span className="text-ngo-green">Building Futures</span>
+   410→            </h1>
+   411→            <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-8 max-w-lg">
+   412→              MELINAWO FOUNDATION is dedicated to creating sustainable change through community
+   413→              development, education, healthcare, and humanitarian support across 23 countries worldwide.
+   414→            </p>
+   415→            <div className="flex flex-wrap gap-4">
+   416→              <Button
+   417→                size="lg"
+   418→                className="bg-ngo-green hover:bg-ngo-green-light text-white px-8 h-12 text-base font-semibold"
+   419→                onClick={scrollToDonate}
+   420→              >
+   421→                <Heart className="h-5 w-5 mr-2" />
+   422→                Donate Now
+   423→              </Button>
+   424→              <Button
+   425→                size="lg"
+   426→                variant="outline"
+   427→                className="px-8 h-12 text-base font-semibold"
+   428→                onClick={scrollToCauses}
+   429→              >
+   430→                Explore Causes
+   431→                <ArrowRight className="h-5 w-5 ml-2" />
+   432→              </Button>
+   433→            </div>
+   434→          </motion.div>
+   435→
+   436→          {/* Right: Stats Cards */}
+   437→          <motion.div
+   438→            initial={{ opacity: 0, x: 40 }}
+   439→            animate={{ opacity: 1, x: 0 }}
+   440→            transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+   441→            className="grid grid-cols-2 gap-4"
+   442→          >
+   443→            <StatCard
+   444→              icon={<Target className="h-6 w-6" />}
+   445→              value={causeCount}
+   446→              suffix=""
+   447→              label="Active Projects"
+   448→              ref={causeRef}
+   449→              delay={0}
+   450→            />
+   451→            <StatCard
+   452→              icon={<Globe className="h-6 w-6" />}
+   453→              value={countryCount}
+   454→              suffix="+"
+   455→              label="Countries Served"
+   456→              ref={countryRef}
+   457→              delay={0.1}
+   458→            />
+   459→            <StatCard
+   460→              icon={<Users className="h-6 w-6" />}
+   461→              value={donorCount}
+   462→              suffix="+"
+   463→              label="Global Donors"
+   464→              ref={donorRef}
+   465→              delay={0.2}
+   466→            />
+   467→            <StatCard
+   468→              icon={<Award className="h-6 w-6" />}
+   469→              value={14}
+   470→              suffix=""
+   471→              label="Years of Service"
+   472→              delay={0.3}
+   473→              staticValue
+   474→            />
+   475→          </motion.div>
+   476→        </div>
+   477→      </div>
+   478→
+   479→      {/* Bottom wave decoration */}
+   480→      <div className="absolute bottom-0 left-0 right-0">
+   481→        <svg viewBox="0 0 1440 80" fill="none" className="w-full h-auto">
+   482→          <path
+   483→            d="M0 40C240 70 480 10 720 40C960 70 1200 10 1440 40V80H0V40Z"
+   484→            fill="white"
+   485→            fillOpacity="0.6"
+   486→          />
+   487→          <path d="M0 60C360 80 720 40 1080 60C1260 70 1380 55 1440 60V80H0V60Z" fill="white" />
+   488→        </svg>
+   489→      </div>
+   490→    </section>
+   491→  );
+   492→}
+   493→
+   494→function StatCard({
+   495→  icon,
+   496→  value,
+   497→  suffix,
+   498→  label,
+   499→  ref,
+   500→  delay = 0,
+   501→  staticValue = false,
+   502→}: {
+   503→  icon: React.ReactNode;
+   504→  value: number;
+   505→  suffix: string;
+   506→  label: string;
+   507→  ref?: React.Ref<HTMLSpanElement>;
+   508→  delay?: number;
+   509→  staticValue?: boolean;
+   510→}) {
+   511→  const { count, ref: counterRef } = useAnimatedCounter(value, 2000);
+   512→  const displayRef = ref || counterRef;
+   513→
+   514→  return (
+   515→    <motion.div
+   516→      initial={{ opacity: 0, y: 20 }}
+   517→      animate={{ opacity: 1, y: 0 }}
+   518→      transition={{ duration: 0.5, delay }}
+   519→    >
+   520→      <Card className="border-0 shadow-lg shadow-ngo-green/5 bg-white/80 backdrop-blur-sm">
+   521→        <CardContent className="p-5">
+   522→          <div className="w-10 h-10 rounded-lg bg-ngo-green-50 flex items-center justify-center text-ngo-green mb-3">
+   523→            {icon}
+   524→          </div>
+   525→          <p className="text-2xl sm:text-3xl font-bold text-foreground">
+   526→            <span ref={staticValue ? undefined : displayRef}>
+   527→              {staticValue ? value : count.toLocaleString()}
+   528→            </span>
+   529→            {suffix}
+   530→          </p>
+   531→          <p className="text-sm text-muted-foreground mt-1">{label}</p>
+   532→        </CardContent>
+   533→      </Card>
+   534→    </motion.div>
+   535→  );
+   536→}
+   537→
+   538→/* ─────────────────────── ABOUT / MISSION ─────────────────────── */
+   539→
+   540→function AboutSection() {
+   541→  const missions = [
+   542→    {
+   543→      icon: <Droplets className="h-7 w-7" />,
+   544→      title: 'Health Education and Community Outreach',
+   545→      desc: 'Bringing vital health knowledge directly to communities through workshops, outreach programs, and partnerships with local health organizations. We educate families on preventive care, nutrition, hygiene, and early detection to build healthier communities from the ground up.',
+   546→    },
+   547→    {
+   548→      icon: <Heart className="h-7 w-7" />,
+   549→      title: 'Free Health Screening and Surgical Support',
+   550→      desc: 'Organizing free health screening camps and providing access to surgical interventions for those who cannot afford treatment. Our medical teams work with hospitals and specialists to deliver life-changing procedures to underserved populations across multiple regions.',
+   551→    },
+   552→    {
+   553→      icon: <Users className="h-7 w-7" />,
+   554→      title: 'Endometriosis Awareness and Advocacy',
+   555→      desc: 'Leading the charge to break the silence around endometriosis through awareness campaigns, early screening programs, and advocacy for better healthcare policies. We support women affected by this condition with resources, community networks, and access to specialized care.',
+   556→    },
+   557→    {
+   558→      icon: <HandHeart className="h-7 w-7" />,
+   559→      title: 'Support for Vulnerable Individuals and Families',
+   560→      desc: 'Providing direct assistance to vulnerable individuals and families through emergency relief, food support, shelter, and livelihood programs. We focus on those most in need — including children, elderly, persons with disabilities, and families affected by crisis.',
+   561→    },
+   562→  ];
+   563→
+   564→  return (
+   565→    <SectionContainer id="about">
+   566→      <SectionHeading
+   567→        tag="Key Focus Areas"
+   568→        title="Key Focus Areas"
+   569→        subtitle="We believe that lasting change comes from empowering communities with the tools, knowledge, and resources they need to thrive independently."
+   570→      />
+   571→
+   572→      <div className="grid md:grid-cols-2 gap-8 mb-16">
+   573→        <motion.div
+   574→          initial={{ opacity: 0, x: -30 }}
+   575→          whileInView={{ opacity: 1, x: 0 }}
+   576→          viewport={{ once: true }}
+   577→          transition={{ duration: 0.6 }}
+   578→          className="space-y-4"
+   579→        >
+   580→          <h3 className="text-2xl font-bold text-foreground">About Melinawo Foundation</h3>
+   581→          <p className="text-muted-foreground leading-relaxed">
+   582→            Melinawo Foundation is a registered non-governmental organization (NGO) based in Ghana, dedicated to improving the health and well-being of vulnerable individuals and underserved communities. Established with the mission of bringing quality healthcare closer to those who need it most, the Foundation provides health education, free medical screenings, support services, and life-changing surgical interventions for underprivileged populations.
+   583→          </p>
+   584→          <p className="text-muted-foreground leading-relaxed">
+   585→            A key area of focus for Melinawo Foundation is women's health, with a strong commitment to raising awareness and providing support for individuals living with endometriosis. Through community outreach, education, advocacy, and strategic partnerships, the Foundation works to dispel myths and misconceptions surrounding endometriosis, promote early diagnosis, and improve access to timely, appropriate, and affordable medical care. The Foundation also champions the rights and well-being of women affected by the condition, helping them live healthier and more empowered lives.
+   586→          </p>
+   587→          <p className="text-muted-foreground leading-relaxed">
+   588→            Over the years, Melinawo Foundation has collaborated with healthcare professionals, volunteers, development partners, and community leaders to organize medical outreaches, health fairs, awareness campaigns, and surgical missions that have transformed countless lives. These initiatives reflect the Foundation's unwavering belief that quality healthcare is a fundamental human right and should be accessible to everyone, regardless of their socio-economic background.
+   589→          </p>
+   590→          <p className="text-muted-foreground leading-relaxed">
+   591→            Driven by compassion, integrity, and a commitment to sustainable impact, Melinawo Foundation continues to empower communities through preventive healthcare, advocacy, and life-changing medical interventions, creating healthier futures for individuals and families across Ghana.
+   592→          </p>
+   593→          </motion.div>
+   594→
+   595→        {/* Mission & Vision */}
+   596→        <motion.div
+   597→          initial={{ opacity: 0, x: 30 }}
+   598→          whileInView={{ opacity: 1, x: 0 }}
+   599→          viewport={{ once: true }}
+   600→          transition={{ duration: 0.6, delay: 0.15 }}
+   601→          className="relative"
+   602→          id="mission-vision"
+   603→        >
+   604→          <div className="space-y-6">
+   605→            <div className="rounded-xl bg-ngo-green-50 p-6 border border-ngo-green-pale/50">
+   606→              <h4 className="text-lg font-bold text-ngo-green mb-3 flex items-center gap-2">
+   607→                <Target className="h-5 w-5" />
+   608→                Our Mission
+   609→              </h4>
+   610→              <p className="text-muted-foreground leading-relaxed">
+   611→                To promote accessible and equitable healthcare through education, screenings, medical support and advocacy for vulnerable populations, with a special emphasis on women's reproductive health.
+   612→              </p>
+   613→            </div>
+   614→            <div className="rounded-xl bg-gradient-to-br from-ngo-green to-ngo-teal p-6 text-white">
+   615→              <h4 className="text-lg font-bold mb-3 flex items-center gap-2">
+   616→                <Globe className="h-5 w-5" />
+   617→                Our Vision
+   618→              </h4>
+   619→              <p className="text-white/90 leading-relaxed">
+   620→                A healthier, informed society where every individual especially the vulnerable has the opportunity to live a life free from preventable diseases and health related inequalities.
+   621→              </p>
+   622→            </div>
+   623→          </div>
+   624→        </motion.div>
+   625→      </div>
+   626→
+   627→      {/* Core Values */}
+   628→      <div id="core-values" className="mt-12">
+   629→        <h3 className="text-2xl font-bold text-foreground text-center mb-8">Our Core Values</h3>
+   630→        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+   631→          {[
+   632→            {
+   633→              icon: <Heart className="h-6 w-6" />,
+   634→              title: 'Compassion',
+   635→              desc: 'Serving with empathy and respect',
+   636→            },
+   637→            {
+   638→              icon: <Award className="h-6 w-6" />,
+   639→              title: 'Integrity',
+   640→              desc: 'Upholding transparency and accountability in all we do',
+   641→            },
+   642→            {
+   643→              icon: <Users className="h-6 w-6" />,
+   644→              title: 'Collaboration',
+   645→              desc: 'Working together with partners and communities for greater impact',
+   646→            },
+   647→            {
+   648→              icon: <BookOpen className="h-6 w-6" />,
+   649→              title: 'Empowerment',
+   650→              desc: 'Educating individuals to make informed health decisions',
+   651→            },
+   652→          ].map((v, i) => (
+   653→            <motion.div
+   654→              key={v.title}
+   655→              initial={{ opacity: 0, y: 20 }}
+   656→              whileInView={{ opacity: 1, y: 0 }}
+   657→              viewport={{ once: true }}
+   658→              transition={{ duration: 0.4, delay: i * 0.1 }}
+   659→              className="text-center p-5 rounded-xl bg-white border border-border shadow-sm hover:shadow-md transition-shadow"
+   660→            >
+   661→              <div className="w-12 h-12 rounded-full bg-ngo-green-50 text-ngo-green flex items-center justify-center mx-auto mb-3">
+   662→                {v.icon}
+   663→              </div>
+   664→              <h4 className="font-bold text-foreground mb-1">{v.title}</h4>
+   665→              <p className="text-sm text-muted-foreground">{v.desc}</p>
+   666→            </motion.div>
+   667→          ))}
+   668→        </div>
+   669→      </div>
+   670→
+   671→      {/* Key Focus Areas */}
+   672→      <div className="mt-12" id="key-focus-areas">
+   673→        <h3 className="text-2xl font-bold text-foreground text-center mb-8">Key Focus Areas</h3>
+   674→      </div>
+   675→      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+   676→        {missions.map((m, i) => (
+   677→          <motion.div
+   678→            key={m.title}
+   679→            initial={{ opacity: 0, y: 30 }}
+   680→            whileInView={{ opacity: 1, y: 0 }}
+   681→            viewport={{ once: true }}
+   682→            transition={{ duration: 0.5, delay: i * 0.1 }}
+   683→          >
+   684→            <Card className="h-full border-0 shadow-md hover:shadow-lg transition-shadow group">
+   685→              <CardContent className="p-6">
+   686→                <div className="w-12 h-12 rounded-xl bg-ngo-green-50 text-ngo-green flex items-center justify-center mb-4 group-hover:bg-ngo-green group-hover:text-white transition-colors">
+   687→                  {m.icon}
+   688→                </div>
+   689→                <h4 className="font-semibold text-foreground mb-2">{m.title}</h4>
+   690→                <p className="text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
+   691→              </CardContent>
+   692→            </Card>
+   693→          </motion.div>
+   694→        ))}
+   695→      </div>
+   696→    </SectionContainer>
+   697→  );
+   698→}
+   699→
+   700→function MiniStat({ value, label }: { value: string; label: string }) {
+   701→  return (
+   702→    <div className="text-center p-3 rounded-lg bg-muted/50">
+   703→      <p className="text-xl font-bold text-ngo-green">{value}</p>
+   704→      <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
+   705→    </div>
+   706→  );
+   707→}
+   708→
+   709→/* ─────────────────────── CAUSES ─────────────────────── */
+   710→
+   711→function CausesSection({ causes }: { causes: Cause[] }) {
+   712→  const [showAll, setShowAll] = useState(false);
+   713→  const displayed = showAll ? causes : causes.filter((c) => c.featured);
+   714→
+   715→  return (
+   716→    <SectionContainer id="causes" className="bg-muted/30">
+   717→      <SectionHeading
+   718→        tag="Our Causes"
+   719→        title="Support What Matters Most"
+   720→        subtitle="Every cause we champion is rooted in real community needs. Choose a cause close to your heart and help us create measurable, lasting impact."
+   721→      />
+   722→
+   723→      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   724→        {displayed.map((cause, i) => (
+   725→          <motion.div
+   726→            key={cause.id}
+   727→            initial={{ opacity: 0, y: 30 }}
+   728→            whileInView={{ opacity: 1, y: 0 }}
+   729→            viewport={{ once: true }}
+   730→            transition={{ duration: 0.5, delay: i * 0.08 }}
+   731→          >
+   732→            <Card className="h-full overflow-hidden border-0 shadow-md hover:shadow-xl transition-all group">
+   733→              {/* Image placeholder */}
+   734→              <div className={`h-44 bg-gradient-to-br ${categoryGradients[cause.category] || 'from-gray-400 to-gray-600'} relative overflow-hidden`}>
+   735→                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors" />
+   736→                <div className="absolute top-3 left-3">
+   737→                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${categoryColors[cause.category] || 'bg-gray-100 text-gray-700'}`}>
+   738→                    {categoryIcons[cause.category]}
+   739→                    {cause.category}
+   740→                  </span>
+   741→                </div>
+   742→                <div className="absolute bottom-3 right-3">
+   743→                  <span className="bg-white/90 backdrop-blur-sm text-xs font-semibold text-foreground px-2.5 py-1 rounded-full">
+   744→                    {Math.round((cause.raised / cause.goal) * 100)}% funded
+   745→                  </span>
+   746→                </div>
+   747→              </div>
+   748→              <CardContent className="p-5">
+   749→                <h3 className="font-bold text-lg text-foreground mb-2 group-hover:text-ngo-green transition-colors">
+   750→                  {cause.title}
+   751→                </h3>
+   752→                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+   753→                  {cause.description}
+   754→                </p>
+   755→                <div className="space-y-2">
+   756→                  <div className="flex justify-between text-sm">
+   757→                    <span className="font-semibold text-ngo-green">
+   758→                      ${cause.raised.toLocaleString()}
+   759→                    </span>
+   760→                    <span className="text-muted-foreground">
+   761→                      of ${cause.goal.toLocaleString()}
+   762→                    </span>
+   763→                  </div>
+   764→                  <Progress value={(cause.raised / cause.goal) * 100} className="h-2" />
+   765→                </div>
+   766→              </CardContent>
+   767→              <CardFooter className="px-5 pb-5 pt-0">
+   768→                <Button
+   769→                  className="w-full bg-ngo-green hover:bg-ngo-green-light text-white"
+   770→                  onClick={() => document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' })}
+   771→                >
+   772→                  <Heart className="h-4 w-4 mr-2" />
+   773→                  Contribute
+   774→                </Button>
+   775→              </CardFooter>
+   776→            </Card>
+   777→          </motion.div>
+   778→        ))}
+   779→      </div>
+   780→
+   781→      {causes.length > 3 && (
+   782→        <div className="text-center mt-10">
+   783→          <Button
+   784→            variant="outline"
+   785→            size="lg"
+   786→            onClick={() => setShowAll(!showAll)}
+   787→            className="px-8"
+   788→          >
+   789→            {showAll ? 'Show Featured Only' : `View All ${causes.length} Causes`}
+   790→            <ArrowRight className={`h-4 w-4 ml-2 transition-transform ${showAll ? 'rotate-[-90deg]' : ''}`} />
+   791→          </Button>
+   792→        </div>
+   793→      )}
+   794→    </SectionContainer>
+   795→  );
+   796→}
+   797→
+   798→/* ─────────────────────── IMPACT STATS ─────────────────────── */
+   799→
+   800→function ImpactSection({ stats }: { stats: Stats }) {
+   801→  const statItems = [
+   802→    { label: 'Funds Raised', value: stats.fundsRaised, prefix: '$', suffix: '+', icon: <DollarSign className="h-6 w-6" /> },
+   803→    { label: 'Donors Worldwide', value: stats.donors, prefix: '', suffix: '+', icon: <Heart className="h-6 w-6" /> },
+   804→    { label: 'Active Projects', value: Math.max(stats.projects, 6), prefix: '', suffix: '', icon: <Target className="h-6 w-6" /> },
+   805→    { label: 'Countries Reached', value: 23, prefix: '', suffix: '', icon: <Globe className="h-6 w-6" /> },
+   806→  ];
+   807→
+   808→  return (
+   809→    <SectionContainer id="impact">
+   810→      <SectionHeading
+   811→        tag="Our Impact"
+   812→        title="Numbers That Tell Our Story"
+   813→        subtitle="Behind every number is a real person whose life has been changed. Here is a snapshot of the impact we have made together with our supporters."
+   814→      />
+   815→
+   816→      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+   817→        {statItems.map((item, i) => (
+   818→          <ImpactStatCard key={item.label} {...item} delay={i * 0.1} />
+   819→        ))}
+   820→      </div>
+   821→    </SectionContainer>
+   822→  );
+   823→}
+   824→
+   825→function ImpactStatCard({
+   826→  label,
+   827→  value,
+   828→  prefix,
+   829→  suffix,
+   830→  icon,
+   831→  delay,
+   832→}: {
+   833→  label: string;
+   834→  value: number;
+   835→  prefix: string;
+   836→  suffix: string;
+   837→  icon: React.ReactNode;
+   838→  delay: number;
+   839→}) {
+   840→  const { count, ref } = useAnimatedCounter(value, 2200);
+   841→  const isMoney = prefix === '$';
+   842→
+   843→  return (
+   844→    <motion.div
+   845→      initial={{ opacity: 0, scale: 0.9 }}
+   846→      whileInView={{ opacity: 1, scale: 1 }}
+   847→      viewport={{ once: true }}
+   848→      transition={{ duration: 0.5, delay }}
+   849→    >
+   850→      <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow">
+   851→        <CardContent className="p-6 sm:p-8">
+   852→          <div className="w-14 h-14 rounded-2xl bg-ngo-green-50 text-ngo-green flex items-center justify-center mx-auto mb-4">
+   853→            {icon}
+   854→          </div>
+   855→          <p className="text-3xl sm:text-4xl font-bold text-foreground mb-1">
+   856→            <span ref={ref}>
+   857→              {prefix}
+   858→              {isMoney ? (count / 1000).toFixed(0) + 'K' : count.toLocaleString()}
+   859→            </span>
+   860→            {suffix}
+   861→          </p>
+   862→          <p className="text-sm text-muted-foreground font-medium">{label}</p>
+   863→        </CardContent>
+   864→      </Card>
+   865→    </motion.div>
+   866→  );
+   867→}
+   868→
+   869→/* ─────────────────────── EVENTS ─────────────────────── */
+   870→
+   871→function EventsSection({ events }: { events: Event[] }) {
+   872→  const eventGradients = [
+   873→    'from-ngo-green to-ngo-teal',
+   874→    'from-ngo-warm to-ngo-orange',
+   875→    'from-ngo-teal to-ngo-green',
+   876→    'from-ngo-red to-ngo-warm',
+   877→  ];
+   878→
+   879→  const eventIcons = [
+   880→    <Star key="star" className="h-8 w-8" />,
+   881→    <Globe key="globe" className="h-8 w-8" />,
+   882→    <Droplets key="drops" className="h-8 w-8" />,
+   883→    <Heart key="heart" className="h-8 w-8" />,
+   884→  ];
+   885→
+   886→  return (
+   887→    <SectionContainer id="events" className="bg-muted/30">
+   888→      <SectionHeading
+   889→        tag="Upcoming Events"
+   890→        title="Join Us in Making a Difference"
+   891→        subtitle="From charity galas to community outreach days, our events bring people together for a common purpose. Find an event near you or participate virtually."
+   892→      />
+   893→
+   894→      <div className="grid md:grid-cols-2 gap-6">
+   895→        {events.map((event, i) => (
+   896→          <motion.div
+   897→            key={event.id}
+   898→            initial={{ opacity: 0, y: 30 }}
+   899→            whileInView={{ opacity: 1, y: 0 }}
+   900→            viewport={{ once: true }}
+   901→            transition={{ duration: 0.5, delay: i * 0.1 }}
+   902→          >
+   903→            <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all group h-full">
+   904→              <div className="flex flex-col sm:flex-row h-full">
+   905→                {/* Date Badge */}
+   906→                <div className={`sm:w-32 flex-shrink-0 bg-gradient-to-br ${eventGradients[i % eventGradients.length]} flex flex-col items-center justify-center p-5 text-white`}>
+   907→                  <div className="text-white/80 mb-1">{eventIcons[i % eventIcons.length]}</div>
+   908→                  <p className="text-3xl font-bold leading-none">
+   909→                    {new Date(event.date).getDate()}
+   910→                  </p>
+   911→                  <p className="text-sm font-medium mt-1 uppercase tracking-wider">
+   912→                    {new Date(event.date).toLocaleString('en-US', { month: 'short' })}
+   913→                  </p>
+   914→                  <p className="text-xs text-white/70 mt-0.5">
+   915→                    {new Date(event.date).getFullYear()}
+   916→                  </p>
+   917→                </div>
+   918→
+   919→                <CardContent className="p-5 flex-1 flex flex-col">
+   920→                  <h3 className="font-bold text-lg text-foreground mb-2 group-hover:text-ngo-green transition-colors">
+   921→                    {event.title}
+   922→                  </h3>
+   923→                  <p className="text-sm text-muted-foreground leading-relaxed mb-3 flex-1 line-clamp-2">
+   924→                    {event.description}
+   925→                  </p>
+   926→                  <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+   927→                    <span className="inline-flex items-center gap-1">
+   928→                      <MapPin className="h-3.5 w-3.5" />
+   929→                      {event.location}
+   930→                    </span>
+   931→                  </div>
+   932→                  <Button
+   933→                    variant="outline"
+   934→                    size="sm"
+   935→                    className="mt-3 w-full sm:w-auto"
+   936→                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+   937→                  >
+   938→                    <Calendar className="h-4 w-4 mr-1.5" />
+   939→                    Register Now
+   940→                  </Button>
+   941→                </CardContent>
+   942→              </div>
+   943→            </Card>
+   944→          </motion.div>
+   945→        ))}
+   946→      </div>
+   947→    </SectionContainer>
+   948→  );
+   949→}
+   950→
+   951→/* ─────────────────────── TEAM ─────────────────────── */
+   952→
+   953→function TeamSection({ team }: { team: TeamMember[] }) {
+   954→  const avatarColors = [
+   955→    'bg-ngo-green',
+   956→    'bg-ngo-warm',
+   957→    'bg-ngo-red',
+   958→    'bg-ngo-teal',
+   959→    'bg-ngo-orange',
+   960→    'bg-ngo-green-light',
+   961→  ];
+   962→
+   963→  return (
+   964→    <SectionContainer id="team">
+   965→      <SectionHeading
+   966→        tag="Our Team"
+   967→        title="The People Behind the Mission"
+   968→        subtitle="Our diverse team of passionate professionals brings together expertise in development, operations, communications, and community engagement."
+   969→      />
+   970→
+   971→      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   972→        {team.map((member, i) => (
+   973→          <motion.div
+   974→            key={member.id}
+   975→            initial={{ opacity: 0, y: 30 }}
+   976→            whileInView={{ opacity: 1, y: 0 }}
+   977→            viewport={{ once: true }}
+   978→            transition={{ duration: 0.5, delay: i * 0.08 }}
+   979→          >
+   980→            <Card className="h-full border-0 shadow-md hover:shadow-lg transition-all group text-center">
+   981→              <CardContent className="p-6">
+   982→                <Avatar className="h-20 w-20 mx-auto mb-4 ring-4 ring-ngo-green-50">
+   983→                  <AvatarFallback className={`${avatarColors[i % avatarColors.length]} text-white text-xl font-bold`}>
+   984→                    {member.name.split(' ').map((n) => n[0]).join('')}
+   985→                  </AvatarFallback>
+   986→                </Avatar>
+   987→                <h3 className="font-bold text-lg text-foreground group-hover:text-ngo-green transition-colors">
+   988→                  {member.name}
+   989→                </h3>
+   990→                <p className="text-sm text-ngo-green font-medium mb-3">{member.role}</p>
+   991→                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+   992→                  {member.bio}
+   993→                </p>
+   994→              </CardContent>
+   995→            </Card>
+   996→          </motion.div>
+   997→        ))}
+   998→      </div>
+   999→    </SectionContainer>
+  1000→  );
+  1001→}
+  1002→
+  1003→/* ─────────────────────── TESTIMONIALS ─────────────────────── */
+  1004→
+  1005→function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
+  1006→  const [active, setActive] = useState(0);
+  1007→
+  1008→  const next = useCallback(() => {
+  1009→    setActive((prev) => (prev + 1) % testimonials.length);
+  1010→  }, [testimonials.length]);
+  1011→
+  1012→  useEffect(() => {
+  1013→    const timer = setInterval(next, 6000);
+  1014→    return () => clearInterval(timer);
+  1015→  }, [next]);
+  1016→
+  1017→  if (testimonials.length === 0) return null;
+  1018→
+  1019→  const t = testimonials[active];
+  1020→
+  1021→  return (
+  1022→    <SectionContainer id="testimonials" className="bg-gradient-to-br from-ngo-teal to-ngo-green text-white relative overflow-hidden">
+  1023→      <div className="absolute top-10 right-10 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+  1024→      <div className="absolute bottom-10 left-10 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
+  1025→
+  1026→      <div className="relative z-10">
+  1027→        <SectionHeading
+  1028→          tag="Testimonials"
+  1029→          title="Voices of Impact"
+  1030→          subtitle="Hear from the people whose lives have been touched by our work — donors, volunteers, and community members share their experiences."
+  1031→        />
+  1032→
+  1033→        <div className="max-w-3xl mx-auto">
+  1034→          <AnimatePresence mode="wait">
+  1035→            <motion.div
+  1036→              key={active}
+  1037→              initial={{ opacity: 0, y: 20 }}
+  1038→              animate={{ opacity: 1, y: 0 }}
+  1039→              exit={{ opacity: 0, y: -20 }}
+  1040→              transition={{ duration: 0.4 }}
+  1041→              className="text-center"
+  1042→            >
+  1043→              <div className="flex justify-center mb-4">
+  1044→                {[...Array(5)].map((_, i) => (
+  1045→                  <Star key={i} className="h-5 w-5 fill-ngo-amber text-ngo-amber" />
+  1046→                ))}
+  1047→              </div>
+  1048→              <blockquote className="text-lg sm:text-xl leading-relaxed text-white/90 mb-8 italic">
+  1049→                &ldquo;{t.content}&rdquo;
+  1050→              </blockquote>
+  1051→              <div className="flex items-center justify-center gap-3">
+  1052→                <Avatar className="h-12 w-12 ring-2 ring-white/30">
+  1053→                  <AvatarFallback className="bg-white/20 text-white font-semibold">
+  1054→                    {t.name.split(' ').map((n) => n[0]).join('')}
+  1055→                  </AvatarFallback>
+  1056→                </Avatar>
+  1057→                <div className="text-left">
+  1058→                  <p className="font-semibold text-white">{t.name}</p>
+  1059→                  <p className="text-sm text-white/70">{t.role}</p>
+  1060→                </div>
+  1061→              </div>
+  1062→            </motion.div>
+  1063→          </AnimatePresence>
+  1064→
+  1065→          <div className="flex justify-center gap-2 mt-8">
+  1066→            {testimonials.map((_, i) => (
+  1067→              <button
+  1068→                key={i}
+  1069→                onClick={() => setActive(i)}
+  1070→                className={`w-2.5 h-2.5 rounded-full transition-all ${
+  1071→                  i === active ? 'bg-white w-8' : 'bg-white/40 hover:bg-white/60'
+  1072→                }`}
+  1073→                aria-label={`Go to testimonial ${i + 1}`}
+  1074→              />
+  1075→            ))}
+  1076→          </div>
+  1077→        </div>
+  1078→      </div>
+  1079→    </SectionContainer>
+  1080→  );
+  1081→}
+  1082→
+  1083→/* ─────────────────────── DONATE ─────────────────────── */
+  1084→
+  1085→function DonateSection({ causes }: { causes: Cause[] }) {
+  1086→  const [selectedAmount, setSelectedAmount] = useState<number | null>(50);
+  1087→  const [customAmount, setCustomAmount] = useState('');
+  1088→  const [donorName, setDonorName] = useState('');
+  1089→  const [donorEmail, setDonorEmail] = useState('');
+  1090→  const [donorMessage, setDonorMessage] = useState('');
+  1091→  const [selectedCause, setSelectedCause] = useState('');
+  1092→  const [submitting, setSubmitting] = useState(false);
+  1093→  const [success, setSuccess] = useState(false);
+  1094→  const [error, setError] = useState('');
+  1095→
+  1096→  const presetAmounts = [25, 50, 100, 250, 500];
+  1097→
+  1098→  const handleSubmit = async (e: FormEvent) => {
+  1099→    e.preventDefault();
+  1100→    setError('');
+  1101→    setSubmitting(true);
+  1102→
+  1103→    const amount = customAmount ? parseFloat(customAmount) : selectedAmount;
+  1104→    if (!amount || amount <= 0 || !donorName || !donorEmail) {
+  1105→      setError('Please fill in all required fields with valid values.');
+  1106→      setSubmitting(false);
+  1107→      return;
+  1108→    }
+  1109→
+  1110→    try {
+  1111→      const res = await fetch('/api/donate', {
+  1112→        method: 'POST',
+  1113→        headers: { 'Content-Type': 'application/json' },
+  1114→        body: JSON.stringify({
+  1115→          name: donorName,
+  1116→          email: donorEmail,
+  1117→          amount,
+  1118→          causeId: selectedCause || undefined,
+  1119→          message: donorMessage || undefined,
+  1120→        }),
+  1121→      });
+  1122→      const data = await res.json();
+  1123→      if (!res.ok && !data.success) {
+  1124→        setError(data.errors?.[0]?.message || 'Something went wrong. Please try again.');
+  1125→      } else {
+  1126→        setSuccess(true);
+  1127→        setDonorName('');
+  1128→        setDonorEmail('');
+  1129→        setDonorMessage('');
+  1130→        setCustomAmount('');
+  1131→        setSelectedAmount(50);
+  1132→        setSelectedCause('');
+  1133→      }
+  1134→    } catch {
+  1135→      setError('Network error. Please try again.');
+  1136→    } finally {
+  1137→      setSubmitting(false);
+  1138→    }
+  1139→  };
+  1140→
+  1141→  return (
+  1142→    <SectionContainer id="donate">
+  1143→      <SectionHeading
+  1144→        tag="Make a Difference"
+  1145→        title="Your Generosity Changes Lives"
+  1146→        subtitle="Every contribution, no matter the size, directly funds our programs on the ground. Choose an amount and cause that speaks to you."
+  1147→      />
+  1148→
+  1149→      <motion.div
+  1150→        initial={{ opacity: 0, y: 30 }}
+  1151→        whileInView={{ opacity: 1, y: 0 }}
+  1152→        viewport={{ once: true }}
+  1153→        transition={{ duration: 0.6 }}
+  1154→        className="max-w-2xl mx-auto"
+  1155→      >
+  1156→        <Card className="border-0 shadow-xl">
+  1157→          <CardHeader className="bg-ngo-green-50 rounded-t-xl p-6">
+  1158→            <CardTitle className="flex items-center gap-2 text-ngo-green text-xl">
+  1159→              <Heart className="h-5 w-5" />
+  1160→              Donate Now
+  1161→            </CardTitle>
+  1162→          </CardHeader>
+  1163→          <CardContent className="p-6">
+  1164→            {success ? (
+  1165→              <motion.div
+  1166→                initial={{ opacity: 0, scale: 0.95 }}
+  1167→                animate={{ opacity: 1, scale: 1 }}
+  1168→                className="text-center py-8"
+  1169→              >
+  1170→                <div className="w-16 h-16 rounded-full bg-ngo-green-50 text-ngo-green flex items-center justify-center mx-auto mb-4">
+  1171→                  <Heart className="h-8 w-8" />
+  1172→                </div>
+  1173→                <h3 className="text-xl font-bold text-foreground mb-2">Thank You!</h3>
+  1174→                <p className="text-muted-foreground">
+  1175→                  Your generous donation has been received. You will receive a confirmation email
+  1176→                  shortly. Together, we are making a difference.
+  1177→                </p>
+  1178→                <Button
+  1179→                  variant="outline"
+  1180→                  className="mt-6"
+  1181→                  onClick={() => setSuccess(false)}
+  1182→                >
+  1183→                  Make Another Donation
+  1184→                </Button>
+  1185→              </motion.div>
+  1186→            ) : (
+  1187→              <form onSubmit={handleSubmit} className="space-y-5">
+  1188→                {/* Amount Selection */}
+  1189→                <div>
+  1190→                  <label className="block text-sm font-medium text-foreground mb-2">
+  1191→                    Select Amount
+  1192→                  </label>
+  1193→                  <div className="grid grid-cols-5 gap-2 mb-3">
+  1194→                    {presetAmounts.map((amt) => (
+  1195→                      <button
+  1196→                        key={amt}
+  1197→                        type="button"
+  1198→                        onClick={() => {
+  1199→                          setSelectedAmount(amt);
+  1200→                          setCustomAmount('');
+  1201→                        }}
+  1202→                        className={`py-2.5 rounded-lg text-sm font-semibold transition-all border-2 ${
+  1203→                          selectedAmount === amt && !customAmount
+  1204→                            ? 'border-ngo-green bg-ngo-green text-white'
+  1205→                            : 'border-border bg-white text-foreground hover:border-ngo-green/50'
+  1206→                        }`}
+  1207→                      >
+  1208→                        ${amt}
+  1209→                      </button>
+  1210→                    ))}
+  1211→                  </div>
+  1212→                  <Input
+  1213→                    type="number"
+  1214→                    placeholder="Or enter a custom amount"
+  1215→                    value={customAmount}
+  1216→                    onChange={(e) => {
+  1217→                      setCustomAmount(e.target.value);
+  1218→                      if (e.target.value) setSelectedAmount(null);
+  1219→                    }}
+  1220→                    min="1"
+  1221→                    className="mt-1"
+  1222→                  />
+  1223→                </div>
+  1224→
+  1225→                {/* Cause Selection */}
+  1226→                <div>
+  1227→                  <label className="block text-sm font-medium text-foreground mb-2">
+  1228→                    Designate a Cause (Optional)
+  1229→                  </label>
+  1230→                  <select
+  1231→                    value={selectedCause}
+  1232→                    onChange={(e) => setSelectedCause(e.target.value)}
+  1233→                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+  1234→                  >
+  1235→                    <option value="">General Fund</option>
+  1236→                    {causes.map((c) => (
+  1237→                      <option key={c.id} value={c.id}>
+  1238→                        {c.title}
+  1239→                      </option>
+  1240→                    ))}
+  1241→                  </select>
+  1242→                </div>
+  1243→
+  1244→                <Separator />
+  1245→
+  1246→                {/* Donor Info */}
+  1247→                <div className="grid sm:grid-cols-2 gap-4">
+  1248→                  <div>
+  1249→                    <label className="block text-sm font-medium text-foreground mb-1.5">
+  1250→                      Full Name *
+  1251→                    </label>
+  1252→                    <Input
+  1253→                      value={donorName}
+  1254→                      onChange={(e) => setDonorName(e.target.value)}
+  1255→                      placeholder="John Smith"
+  1256→                      required
+  1257→                    />
+  1258→                  </div>
+  1259→                  <div>
+  1260→                    <label className="block text-sm font-medium text-foreground mb-1.5">
+  1261→                      Email Address *
+  1262→                    </label>
+  1263→                    <Input
+  1264→                      type="email"
+  1265→                      value={donorEmail}
+  1266→                      onChange={(e) => setDonorEmail(e.target.value)}
+  1267→                      placeholder="john@example.com"
+  1268→                      required
+  1269→                    />
+  1270→                  </div>
+  1271→                </div>
+  1272→
+  1273→                <div>
+  1274→                  <label className="block text-sm font-medium text-foreground mb-1.5">
+  1275→                    Message (Optional)
+  1276→                  </label>
+  1277→                  <Textarea
+  1278→                    value={donorMessage}
+  1279→                    onChange={(e) => setDonorMessage(e.target.value)}
+  1280→                    placeholder="Leave an encouraging message..."
+  1281→                    rows={2}
+  1282→                  />
+  1283→                </div>
+  1284→
+  1285→                {error && (
+  1286→                  <p className="text-sm text-destructive font-medium">{error}</p>
+  1287→                )}
+  1288→
+  1289→                <Button
+  1290→                  type="submit"
+  1291→                  size="lg"
+  1292→                  className="w-full bg-ngo-green hover:bg-ngo-green-light text-white h-12 text-base font-semibold"
+  1293→                  disabled={submitting}
+  1294→                >
+  1295→                  {submitting ? (
+  1296→                    <span className="flex items-center gap-2">
+  1297→                      <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+  1298→                      Processing...
+  1299→                    </span>
+  1300→                  ) : (
+  1301→                    <>
+  1302→                      <Heart className="h-5 w-5 mr-2" />
+  1303→                      Complete Donation
+  1304→                    </>
+  1305→                  )}
+  1306→                </Button>
+  1307→
+  1308→                <p className="text-xs text-center text-muted-foreground">
+  1309→                  Your payment information is secure. 97% of your donation goes directly to programs.
+  1310→                </p>
+  1311→              </form>
+  1312→            )}
+  1313→          </CardContent>
+  1314→        </Card>
+  1315→      </motion.div>
+  1316→    </SectionContainer>
+  1317→  );
+  1318→}
+  1319→
+  1320→/* ─────────────────────── NEWSLETTER / CONTACT ─────────────────────── */
+  1321→
+  1322→function ContactSection() {
+  1323→  const [email, setEmail] = useState('');
+  1324→  const [subscribing, setSubscribing] = useState(false);
+  1325→  const [subSuccess, setSubSuccess] = useState('');
+  1326→
+  1327→  const [contactName, setContactName] = useState('');
+  1328→  const [contactEmail, setContactEmail] = useState('');
+  1329→  const [contactSubject, setContactSubject] = useState('');
+  1330→  const [contactMessage, setContactMessage] = useState('');
+  1331→  const [contactSubmitting, setContactSubmitting] = useState(false);
+  1332→  const [contactSuccess, setContactSuccess] = useState(false);
+  1333→  const [contactError, setContactError] = useState('');
+  1334→
+  1335→  const handleSubscribe = async (e: FormEvent) => {
+  1336→    e.preventDefault();
+  1337→    if (!email) return;
+  1338→    setSubscribing(true);
+  1339→    try {
+  1340→      const res = await fetch('/api/subscribe', {
+  1341→        method: 'POST',
+  1342→        headers: { 'Content-Type': 'application/json' },
+  1343→        body: JSON.stringify({ email }),
+  1344→      });
+  1345→      const data = await res.json();
+  1346→      if (data.success) {
+  1347→        setSubSuccess(data.message || 'Thank you for subscribing!');
+  1348→        setEmail('');
+  1349→        setTimeout(() => setSubSuccess(''), 5000);
+  1350→      }
+  1351→    } catch {
+  1352→      setSubSuccess('');
+  1353→    } finally {
+  1354→      setSubscribing(false);
+  1355→    }
+  1356→  };
+  1357→
+  1358→  const handleContact = async (e: FormEvent) => {
+  1359→    e.preventDefault();
+  1360→    setContactError('');
+  1361→    setContactSubmitting(true);
+  1362→    try {
+  1363→      const res = await fetch('/api/contact', {
+  1364→        method: 'POST',
+  1365→        headers: { 'Content-Type': 'application/json' },
+  1366→        body: JSON.stringify({
+  1367→          name: contactName,
+  1368→          email: contactEmail,
+  1369→          subject: contactSubject,
+  1370→          message: contactMessage,
+  1371→        }),
+  1372→      });
+  1373→      const data = await res.json();
+  1374→      if (!res.ok && !data.success) {
+  1375→        setContactError(data.errors?.[0]?.message || 'Something went wrong.');
+  1376→      } else {
+  1377→        setContactSuccess(true);
+  1378→        setContactName('');
+  1379→        setContactEmail('');
+  1380→        setContactSubject('');
+  1381→        setContactMessage('');
+  1382→      }
+  1383→    } catch {
+  1384→      setContactError('Network error. Please try again.');
+  1385→    } finally {
+  1386→      setContactSubmitting(false);
+  1387→    }
+  1388→  };
+  1389→
+  1390→  return (
+  1391→    <SectionContainer id="contact" className="bg-muted/30">
+  1392→      <SectionHeading
+  1393→        tag="Get Involved"
+  1394→        title="Join Our Movement"
+  1395→        subtitle="Whether you want to volunteer, partner with us, or simply stay informed — we would love to hear from you."
+  1396→      />
+  1397→
+  1398→      <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+  1399→        {/* Newsletter */}
+  1400→        <motion.div
+  1401→          initial={{ opacity: 0, x: -30 }}
+  1402→          whileInView={{ opacity: 1, x: 0 }}
+  1403→          viewport={{ once: true }}
+  1404→          transition={{ duration: 0.6 }}
+  1405→        >
+  1406→          <Card className="h-full border-0 shadow-md">
+  1407→            <CardContent className="p-6 sm:p-8">
+  1408→              <div className="w-12 h-12 rounded-xl bg-ngo-green-50 text-ngo-green flex items-center justify-center mb-4">
+  1409→                <Send className="h-6 w-6" />
+  1410→              </div>
+  1411→              <h3 className="text-xl font-bold text-foreground mb-2">Stay Informed</h3>
+  1412→              <p className="text-muted-foreground mb-6 leading-relaxed">
+  1413→                Subscribe to our newsletter for monthly impact updates, event invitations, and
+  1414→                stories from the communities we serve. No spam — just meaningful updates about the
+  1415→                change you are helping to create.
+  1416→              </p>
+  1417→
+  1418→              {subSuccess ? (
+  1419→                <div className="bg-ngo-green-50 text-ngo-green p-4 rounded-lg text-sm font-medium">
+  1420→                  {subSuccess}
+  1421→                </div>
+  1422→              ) : (
+  1423→                <form onSubmit={handleSubscribe} className="flex gap-2">
+  1424→                  <Input
+  1425→                    type="email"
+  1426→                    placeholder="Enter your email"
+  1427→                    value={email}
+  1428→                    onChange={(e) => setEmail(e.target.value)}
+  1429→                    required
+  1430→                    className="flex-1"
+  1431→                  />
+  1432→                  <Button
+  1433→                    type="submit"
+  1434→                    className="bg-ngo-green hover:bg-ngo-green-light text-white whitespace-nowrap"
+  1435→                    disabled={subscribing}
+  1436→                  >
+  1437→                    {subscribing ? 'Subscribing...' : 'Subscribe'}
+  1438→                  </Button>
+  1439→                </form>
+  1440→              )}
+  1441→
+  1442→              <div className="mt-8 space-y-3">
+  1443→                <h4 className="font-semibold text-sm text-foreground">What you will receive:</h4>
+  1444→                {[
+  1445→                  'Monthly impact reports with real stories',
+  1446→                  'First access to event registrations',
+  1447→                  'Volunteer opportunity alerts',
+  1448→                  'Annual financial transparency report',
+  1449→                ].map((item) => (
+  1450→                  <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+  1451→                    <Heart className="h-4 w-4 text-ngo-green mt-0.5 flex-shrink-0" />
+  1452→                    {item}
+  1453→                  </div>
+  1454→                ))}
+  1455→              </div>
+  1456→            </CardContent>
+  1457→          </Card>
+  1458→        </motion.div>
+  1459→
+  1460→        {/* Contact Form */}
+  1461→        <motion.div
+  1462→          initial={{ opacity: 0, x: 30 }}
+  1463→          whileInView={{ opacity: 1, x: 0 }}
+  1464→          viewport={{ once: true }}
+  1465→          transition={{ duration: 0.6, delay: 0.1 }}
+  1466→        >
+  1467→          <Card className="h-full border-0 shadow-md" id="volunteer">
+  1468→            <CardContent className="p-6 sm:p-8">
+  1469→              <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+  1470→                <Users className="h-6 w-6" />
+  1471→              </div>
+  1472→              <h3 className="text-xl font-bold text-foreground mb-2">Contact Us</h3>
+  1473→              <p className="text-muted-foreground mb-6 leading-relaxed">
+  1474→                Have questions about volunteering, partnerships, or our programs? Reach out and our
+  1475→                team will respond within 24 hours.
+  1476→              </p>
+  1477→
+  1478→              {contactSuccess ? (
+  1479→                <motion.div
+  1480→                  initial={{ opacity: 0, scale: 0.95 }}
+  1481→                  animate={{ opacity: 1, scale: 1 }}
+  1482→                  className="text-center py-8"
+  1483→                >
+  1484→                  <div className="w-14 h-14 rounded-full bg-ngo-green-50 text-ngo-green flex items-center justify-center mx-auto mb-3">
+  1485→                    <Send className="h-6 w-6" />
+  1486→                  </div>
+  1487→                  <h4 className="font-bold text-foreground mb-1">Message Sent!</h4>
+  1488→                  <p className="text-sm text-muted-foreground">
+  1489→                    We will get back to you within 24 hours.
+  1490→                  </p>
+  1491→                  <Button variant="outline" className="mt-4" onClick={() => setContactSuccess(false)}>
+  1492→                    Send Another Message
+  1493→                  </Button>
+  1494→                </motion.div>
+  1495→              ) : (
+  1496→                <form onSubmit={handleContact} className="space-y-4">
+  1497→                  <div className="grid sm:grid-cols-2 gap-4">
+  1498→                    <div>
+  1499→                      <label className="block text-sm font-medium text-foreground mb-1.5">Name *</label>
+  1500→                      <Input
+  1501→                        value={contactName}
+  1502→                        onChange={(e) => setContactName(e.target.value)}
+  1503→                        placeholder="Your name"
+  1504→                        required
+  1505→                      />
+  1506→                    </div>
+  1507→                    <div>
+  1508→                      <label className="block text-sm font-medium text-foreground mb-1.5">Email *</label>
+  1509→                      <Input
+  1510→                        type="email"
+  1511→                        value={contactEmail}
+  1512→                        onChange={(e) => setContactEmail(e.target.value)}
+  1513→                        placeholder="your@email.com"
+  1514→                        required
+  1515→                      />
+  1516→                    </div>
+  1517→                  </div>
+  1518→                  <div>
+  1519→                    <label className="block text-sm font-medium text-foreground mb-1.5">Subject *</label>
+  1520→                    <Input
+  1521→                      value={contactSubject}
+  1522→                      onChange={(e) => setContactSubject(e.target.value)}
+  1523→                      placeholder="How can we help?"
+  1524→                      required
+  1525→                    />
+  1526→                  </div>
+  1527→                  <div>
+  1528→                    <label className="block text-sm font-medium text-foreground mb-1.5">Message *</label>
+  1529→                    <Textarea
+  1530→                      value={contactMessage}
+  1531→                      onChange={(e) => setContactMessage(e.target.value)}
+  1532→                      placeholder="Tell us more about your inquiry..."
+  1533→                      rows={4}
+  1534→                      required
+  1535→                    />
+  1536→                  </div>
+  1537→                  {contactError && (
+  1538→                    <p className="text-sm text-destructive font-medium">{contactError}</p>
+  1539→                  )}
+  1540→                  <Button
+  1541→                    type="submit"
+  1542→                    className="w-full bg-ngo-green hover:bg-ngo-green-light text-white"
+  1543→                    disabled={contactSubmitting}
+  1544→                  >
+  1545→                    {contactSubmitting ? (
+  1546→                      <span className="flex items-center gap-2">
+  1547→                        <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+  1548→                        Sending...
+  1549→                      </span>
+  1550→                    ) : (
+  1551→                      <>
+  1552→                        <Send className="h-4 w-4 mr-2" />
+  1553→                        Send Message
+  1554→                      </>
+  1555→                    )}
+  1556→                  </Button>
+  1557→                </form>
+  1558→              )}
+  1559→            </CardContent>
+  1560→          </Card>
+  1561→        </motion.div>
+  1562→      </div>
+  1563→    </SectionContainer>
+  1564→  );
+  1565→}
+  1566→
+  1567→/* ─────────────────────── VOLUNTEER CTA BANNER ─────────────────────── */
+  1568→
+  1569→function VolunteerBanner() {
+  1570→  return (
+  1571→    <section className="relative py-16 md:py-20 overflow-hidden">
+  1572→      <div className="absolute inset-0 bg-gradient-to-r from-ngo-green to-ngo-teal" />
+  1573→      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
+  1574→      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+  1575→        <motion.div
+  1576→          initial={{ opacity: 0, y: 20 }}
+  1577→          whileInView={{ opacity: 1, y: 0 }}
+  1578→          viewport={{ once: true }}
+  1579→          transition={{ duration: 0.6 }}
+  1580→        >
+  1581→          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+  1582→            Ready to Make an Impact?
+  1583→          </h2>
+  1584→          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
+  1585→            Whether you volunteer your time, donate resources, or simply spread the word — every
+  1586→            action counts. Join our global community of changemakers today.
+  1587→          </p>
+  1588→          <div className="flex flex-wrap justify-center gap-4">
+  1589→            <Button
+  1590→              size="lg"
+  1591→              className="bg-white text-ngo-green hover:bg-white/90 px-8 h-12 text-base font-semibold"
+  1592→              onClick={() => document.getElementById('donate')?.scrollIntoView({ behavior: 'smooth' })}
+  1593→            >
+  1594→              <Heart className="h-5 w-5 mr-2" />
+  1595→              Start Donating
+  1596→            </Button>
+  1597→            <Button
+  1598→              size="lg"
+  1599→              variant="outline"
+  1600→              className="border-white/30 text-white hover:bg-white/10 px-8 h-12 text-base font-semibold"
+  1601→              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+  1602→            >
+  1603→              <Users className="h-5 w-5 mr-2" />
+  1604→              Become a Volunteer
+  1605→            </Button>
+  1606→          </div>
+  1607→        </motion.div>
+  1608→      </div>
+  1609→    </section>
+  1610→  );
+  1611→}
+  1612→
+  1613→/* ─────────────────────── FOOTER ─────────────────────── */
+  1614→
+  1615→function Footer() {
+  1616→  const [showScrollTop, setShowScrollTop] = useState(false);
+  1617→
+  1618→  useEffect(() => {
+  1619→    const onScroll = () => setShowScrollTop(window.scrollY > 400);
+  1620→    window.addEventListener('scroll', onScroll, { passive: true });
+  1621→    return () => window.removeEventListener('scroll', onScroll);
+  1622→  }, []);
+  1623→
+  1624→  const footerLinks = {
+  1625→    'Get Involved': ['Donate', 'Volunteer', 'Partner With Us', 'Corporate Giving', 'Fundraise'],
+  1626→    'About': ['Our Story', 'Team', 'Financial Reports', 'Careers', 'Press'],
+  1627→    'Resources': ['Blog', 'Annual Report', 'FAQ', 'Privacy Policy', 'Terms of Use'],
+  1628→  };
+  1629→
+  1630→  return (
+  1631→    <footer className="bg-ngo-teal text-white">
+  1632→      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+  1633→        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+  1634→          {/* Brand */}
+  1635→          <div className="col-span-2 md:col-span-1">
+  1636→            <div className="flex items-center gap-2 mb-4">
+  1637→              <img src="/logo.png" alt="MELINAWO FOUNDATION" className="h-9 w-auto brightness-0 invert" />
+  1638→              <span className="text-lg font-bold">MELINAWO FOUNDATION</span>
+  1639→            </div>
+  1640→            <p className="text-sm text-white/60 leading-relaxed mb-4">
+  1641→              Creating sustainable change through community development, education, healthcare, and
+  1642→              humanitarian support since 2012.
+  1643→            </p>
+  1644→            <div className="flex items-center gap-2 text-sm text-white/60">
+  1645→              <MapPin className="h-4 w-4" />
+  1646→              123 Foundation Avenue, New York, NY 10001
+  1647→            </div>
+  1648→          </div>
+  1649→
+  1650→          {/* Link Columns */}
+  1651→          {Object.entries(footerLinks).map(([title, links]) => (
+  1652→            <div key={title}>
+  1653→              <h4 className="font-semibold text-sm mb-4 text-white">{title}</h4>
+  1654→              <ul className="space-y-2.5">
+  1655→                {links.map((link) => (
+  1656→                  <li key={link}>
+  1657→                    <a
+  1658→                      href="#"
+  1659→                      className="text-sm text-white/60 hover:text-white transition-colors"
+  1660→                    >
+  1661→                      {link}
+  1662→                    </a>
+  1663→                  </li>
+  1664→                ))}
+  1665→              </ul>
+  1666→            </div>
+  1667→          ))}
+  1668→        </div>
+  1669→
+  1670→        <Separator className="my-8 bg-white/10" />
+  1671→
+  1672→        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/50">
+  1673→          <p>&copy; 2026 MELINAWO FOUNDATION. All rights reserved.</p>
+  1674→          <p>
+  1675→            Designed and Powered by <a href="https://clipe233eng.net/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors underline underline-offset-2">Clipe233 Engineers</a>
+  1676→          </p>
+  1677→        </div>
+  1678→      </div>
+  1679→
+  1680→      {/* Scroll to top */}
+  1681→      <AnimatePresence>
+  1682→        {showScrollTop && (
+  1683→          <motion.button
+  1684→            initial={{ opacity: 0, y: 10 }}
+  1685→            animate={{ opacity: 1, y: 0 }}
+  1686→            exit={{ opacity: 0, y: 10 }}
+  1687→            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+  1688→            className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full bg-ngo-green text-white shadow-lg hover:bg-ngo-green-light transition-colors flex items-center justify-center"
+  1689→            aria-label="Scroll to top"
+  1690→          >
+  1691→            <ChevronUp className="h-5 w-5" />
+  1692→          </motion.button>
+  1693→        )}
+  1694→      </AnimatePresence>
+  1695→    </footer>
+  1696→  );
+  1697→}
+  1698→
+  1699→/* ─────────────────────── MAIN PAGE ─────────────────────── */
+  1700→
+  1701→export default function Home() {
+  1702→  const [causes, setCauses] = useState<Cause[]>([]);
+  1703→  const [events, setEvents] = useState<Event[]>([]);
+  1704→  const [team, setTeam] = useState<TeamMember[]>([]);
+  1705→  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  1706→  const [stats, setStats] = useState<Stats>({
+  1707→    fundsRaised: 2450000,
+  1708→    donors: 18500,
+  1709→    projects: 6,
+  1710→    volunteers: 3000,
+  1711→    countries: 23,
+  1712→  });
+  1713→  const [loading, setLoading] = useState(true);
+  1714→
+  1715→  useEffect(() => {
+  1716→    async function fetchData() {
+  1717→      try {
+  1718→        const [causesRes, eventsRes, teamRes, testimonialsRes, statsRes] = await Promise.all([
+  1719→          fetch('/api/causes'),
+  1720→          fetch('/api/events'),
+  1721→          fetch('/api/team'),
+  1722→          fetch('/api/testimonials'),
+  1723→          fetch('/api/stats'),
+  1724→        ]);
+  1725→
+  1726→        const [causesData, eventsData, teamData, testimonialsData, statsData] = await Promise.all([
+  1727→          causesRes.json(),
+  1728→          eventsRes.json(),
+  1729→          teamRes.json(),
+  1730→          testimonialsRes.json(),
+  1731→          statsRes.json(),
+  1732→        ]);
+  1733→
+  1734→        setCauses(causesData);
+  1735→        setEvents(eventsData.slice(0, 2));
+  1736→        setTeam(teamData.slice(0, 3));
+  1737→        setTestimonials(testimonialsData);
+  1738→        if (statsData.fundsRaised) setStats(statsData);
+  1739→      } catch (err) {
+  1740→        console.error('Failed to fetch data:', err);
+  1741→      } finally {
+  1742→        setLoading(false);
+  1743→      }
+  1744→    }
+  1745→    fetchData();
+  1746→  }, []);
+  1747→
+  1748→  if (loading) {
+  1749→    return (
+  1750→      <div className="min-h-screen flex items-center justify-center">
+  1751→        <div className="flex flex-col items-center gap-4">
+  1752→          <div className="w-12 h-12 rounded-full border-4 border-ngo-green/20 border-t-ngo-green animate-spin" />
+  1753→          <p className="text-muted-foreground text-sm">Loading...</p>
+  1754→        </div>
+  1755→      </div>
+  1756→    );
+  1757→  }
+  1758→
+  1759→  return (
+  1760→    <div className="min-h-screen flex flex-col">
+  1761→      <Navbar />
+  1762→      <main className="flex-1">
+  1763→        <HeroSection />
+  1764→        <AboutSection />
+  1765→        <EventsSection events={events} />
+  1766→        <TeamSection team={team} />
+  1767→        <TestimonialsSection testimonials={testimonials} />
+  1768→        <DonateSection causes={causes} />
+  1769→        <VolunteerBanner />
+  1770→        <ContactSection />
+  1771→      </main>
+  1772→      <Footer />
+  1773→    </div>
+  1774→  );
+  1775→}
