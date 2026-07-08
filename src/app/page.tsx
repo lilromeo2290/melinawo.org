@@ -174,12 +174,13 @@ function Navbar() {
 
   const links = [
     { label: 'Home', href: '#' },
-    { label: 'About', href: '#about' },
-    { label: 'Causes', href: '#causes' },
-    { label: 'Impact', href: '#impact' },
-    { label: 'Events', href: '#events' },
-    { label: 'Team', href: '#team' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'About Us', href: '#about' },
+    { label: 'Programs / Projects', href: '#causes' },
+    { label: 'Our Impact', href: '#impact' },
+    { label: 'Get Involved', href: '#donate' },
+    { label: 'Resources', href: '#team' },
+    { label: 'Gallery', href: '#events' },
+    { label: 'Contact Us', href: '#contact' },
   ];
 
   return (
