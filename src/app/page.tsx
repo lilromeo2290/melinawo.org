@@ -541,31 +541,31 @@ function AboutSection() {
   const missions = [
     {
       icon: <Droplets className="h-7 w-7" />,
-      title: 'Clean Water Access',
-      desc: 'Building wells and filtration systems to bring safe drinking water to over 2 million people in water-scarce regions across Africa and Southeast Asia.',
+      title: 'Health Education and Community Outreach',
+      desc: 'Bringing vital health knowledge directly to communities through workshops, outreach programs, and partnerships with local health organizations. We educate families on preventive care, nutrition, hygiene, and early detection to build healthier communities from the ground up.',
     },
     {
-      icon: <BookOpen className="h-7 w-7" />,
-      title: 'Quality Education',
-      desc: 'Establishing schools, providing scholarships, and training 5,000+ teachers annually to ensure every child has access to quality education regardless of their circumstances.',
+      icon: <Heart className="h-7 w-7" />,
+      title: 'Free Health Screening and Surgical Support',
+      desc: 'Organizing free health screening camps and providing access to surgical interventions for those who cannot afford treatment. Our medical teams work with hospitals and specialists to deliver life-changing procedures to underserved populations across multiple regions.',
     },
     {
-      icon: <TreePine className="h-7 w-7" />,
-      title: 'Community Development',
-      desc: 'Working with local leaders to build infrastructure, create economic opportunities, and strengthen community resilience across 23 countries worldwide.',
+      icon: <Users className="h-7 w-7" />,
+      title: 'Endometriosis Awareness and Advocacy',
+      desc: 'Leading the charge to break the silence around endometriosis through awareness campaigns, early screening programs, and advocacy for better healthcare policies. We support women affected by this condition with resources, community networks, and access to specialized care.',
     },
     {
       icon: <HandHeart className="h-7 w-7" />,
-      title: 'Humanitarian Support',
-      desc: 'Delivering emergency relief, healthcare access, and livelihood programs to communities affected by crisis, conflict, and economic hardship.',
+      title: 'Support for Vulnerable Individuals and Families',
+      desc: 'Providing direct assistance to vulnerable individuals and families through emergency relief, food support, shelter, and livelihood programs. We focus on those most in need — including children, elderly, persons with disabilities, and families affected by crisis.',
     },
   ];
 
   return (
     <SectionContainer id="about">
       <SectionHeading
-        tag="Our Mission"
-        title="Building a Sustainable Future for All"
+        tag="Key Focus Areas"
+        title="Key Focus Areas"
         subtitle="We believe that lasting change comes from empowering communities with the tools, knowledge, and resources they need to thrive independently."
       />
 
