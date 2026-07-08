@@ -1698,8 +1698,8 @@ export default function Home() {
         ]);
 
         setCauses(causesData);
-        setEvents(eventsData);
-        setTeam(teamData);
+        setEvents(eventsData.slice(0, 2));
+        setTeam(teamData.slice(0, 3));
         setTestimonials(testimonialsData);
         if (statsData.fundsRaised) setStats(statsData);
       } catch (err) {
@@ -1728,8 +1728,6 @@ export default function Home() {
       <main className="flex-1">
         <HeroSection />
         <AboutSection />
-        <CausesSection causes={causes} />
-        <ImpactSection stats={stats} />
         <EventsSection events={events} />
         <TeamSection team={team} />
         <TestimonialsSection testimonials={testimonials} />
