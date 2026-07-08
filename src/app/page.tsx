@@ -177,7 +177,6 @@ function Navbar() {
     { label: 'About Us', href: '#about' },
     { label: 'Programs', href: '#causes' },
     { label: 'Our Impact', href: '#impact' },
-    { label: 'Get Involved', href: '#donate' },
     { label: 'Resources', href: '#team' },
     { label: 'Gallery', href: '#events' },
     { label: 'Contact Us', href: '#contact' },
