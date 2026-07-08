@@ -668,7 +668,10 @@ function AboutSection() {
         </div>
       </div>
 
-      {/* Mission Pillars */}
+      {/* Key Focus Areas */}
+      <div className="mt-12" id="key-focus-areas">
+        <h3 className="text-2xl font-bold text-foreground text-center mb-8">Key Focus Areas</h3>
+      </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {missions.map((m, i) => (
           <motion.div
