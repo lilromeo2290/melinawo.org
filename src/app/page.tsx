@@ -1472,10 +1472,20 @@ function ContactSection() {
                 <Users className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold text-foreground mb-2">Contact Us</h3>
-              <p className="text-muted-foreground mb-6 leading-relaxed">
+              <p className="text-muted-foreground mb-4 leading-relaxed">
                 Have questions about volunteering, partnerships, or our programs? Reach out and our
                 team will respond within 24 hours.
               </p>
+              <div className="flex flex-col gap-2 mb-6 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <svg className="h-4 w-4 text-ngo-green" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.02l-2.2 2.19z"/></svg>
+                  <a href="tel:+233503908863" className="hover:text-foreground transition-colors">Call/WhatsApp: 0503908863</a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="h-4 w-4 text-ngo-green" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                  <a href="mailto:melinawofoundation@gmail.com" className="hover:text-foreground transition-colors">melinawofoundation@gmail.com</a>
+                </div>
+              </div>
 
               {contactSuccess ? (
                 <motion.div
@@ -1642,9 +1652,17 @@ function Footer() {
             <p className="text-sm text-white/60 leading-relaxed mb-4">
               I am truly here for you.
             </p>
-            <div className="flex items-center gap-2 text-sm text-white/60">
+            <div className="flex items-center gap-2 text-sm text-white/60 mb-2">
               <MapPin className="h-4 w-4" />
-              123 Foundation Avenue, New York, NY 10001
+              Ghana
+            </div>
+            <div className="flex items-center gap-2 text-sm text-white/60 mb-2">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.02l-2.2 2.19z"/></svg>
+              <a href="tel:+233503908863" className="hover:text-white transition-colors">0503908863</a>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-white/60">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              <a href="mailto:melinawofoundation@gmail.com" className="hover:text-white transition-colors">melinawofoundation@gmail.com</a>
             </div>
           </div>
 
